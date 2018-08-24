@@ -5,7 +5,7 @@
   "main": "main.js",
   "dependencies": {},
   "devDependencies": {
-    "electron": "^2.0.5",
+    "electron": "^2.0.8",
     "eslint": "^5.2.0"
   },
   "scripts": {
