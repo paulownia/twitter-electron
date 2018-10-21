@@ -10,7 +10,7 @@ app.on('ready', () => {
     config.init();
     menu.init();
     browser.init();
-
+    browser.loadHome();
 });
 
 app.on('window-all-closed', () => {
