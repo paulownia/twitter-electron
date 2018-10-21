@@ -3,6 +3,9 @@ const event = remote.require('./lib/event');
 
 document.addEventListener('DOMContentLoaded', () => {
     const search = document.getElementById('search');
+    search.focus();
+
+
     search.addEventListener('keypress', (e) => {
         if (e.keyCode !== 13) {  // enter
             return;
@@ -18,5 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const encoded = encodeURIComponent(raw);
 
         event.emit('search',{ raw: raw, encoded: encoded });
+        event.emit('search-end');
+    });
+    search.addEventListener('blur', () => {
+        event.emit('search-end');
     });
 });
