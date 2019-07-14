@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const search = document.getElementById('search');
     search.focus();
 
-
     search.addEventListener('keypress', (e) => {
         if (e.keyCode !== 13) {  // enter
             return;
@@ -22,8 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         event.emit('search',{ raw: raw, encoded: encoded });
         event.emit('search-end');
+        search.value = '';
     });
     search.addEventListener('blur', () => {
         event.emit('search-end');
+        search.value = '';
     });
 });
