@@ -7,8 +7,9 @@
     "electron-default-menu": "^1.0.1"
   },
   "devDependencies": {
-    "electron": "^2.0.8",
-    "eslint": "^5.2.0"
+    "electron": "^2.0.18",
+    "electron-packager": "^14.0.1",
+    "eslint": "^5.16.0"
   },
   "scripts": {
     "start": "electron .",
