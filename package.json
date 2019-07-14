@@ -13,6 +13,8 @@
   },
   "scripts": {
     "start": "electron .",
+    "package": "npm run clean && npm run build",
+    "build": "electron-packager . electric-twitter --platform=darwin --arch=x64 --extend-info=Info.plist --overwrite",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
