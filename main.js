@@ -7,12 +7,15 @@ const menu = require('./lib/menu');
 const browser = require('./lib/browser');
 
 app.on('ready', () => {
-    config.init();
-    menu.init();
-    browser.init();
-    browser.loadHome();
+  config.init();
+  menu.init();
+  browser.init(true);
 });
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') app.quit();
+  if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('activate', () => {
+  browser.init(true);
 });
