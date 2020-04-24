@@ -1,6 +1,4 @@
-const { remote } = require('electron');
-const event = remote.require('./lib/event');
-
+/* global sendMessageToHost */
 document.addEventListener('DOMContentLoaded', () => {
   const search = document.getElementById('search');
   search.focus();
@@ -19,12 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const encoded = encodeURIComponent(raw);
 
-    event.emit('search',{ raw: raw, encoded: encoded });
-    event.emit('search-end');
+    sendMessageToHost('search', encoded);
+    sendMessageToHost('search-end');
     search.value = '';
   });
   search.addEventListener('blur', () => {
-    event.emit('search-end');
+    sendMessageToHost('search-end');
     search.value = '';
   });
 });
