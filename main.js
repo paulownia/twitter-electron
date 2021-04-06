@@ -9,7 +9,7 @@ const browser = require('./lib/browser');
 app.on('ready', () => {
   config.init();
   menu.init();
-  browser.init(true);
+  browser.init();
 });
 
 app.on('window-all-closed', () => {
