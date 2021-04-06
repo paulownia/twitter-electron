@@ -1,4 +1,4 @@
-/* global sendMessageToHost */
+/* global api */
 document.addEventListener('DOMContentLoaded', () => {
   const search = document.getElementById('search');
   search.focus();
@@ -12,17 +12,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let raw = search.value;
     if (!raw) {
+      api.searchEnd();
       return;
     }
 
     const encoded = encodeURIComponent(raw);
 
-    sendMessageToHost('search', encoded);
-    sendMessageToHost('search-end');
-    search.value = '';
-  });
-  search.addEventListener('blur', () => {
-    sendMessageToHost('search-end');
+    api.search(encoded);
+    api.searchEnd();
     search.value = '';
   });
 });

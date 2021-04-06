@@ -1,7 +1,9 @@
-const {ipcRenderer} = require('electron');
+const { ipcRenderer, contextBridge } = require('electron');
 
-process.once('loaded', () => {
-  global.sendMessageToHost = (channel, ...message) => {
-    ipcRenderer.send(channel, ...message);
-  };
+
+contextBridge.exposeInMainWorld('api', {
+  search: (value) => ipcRenderer.invoke('search', value),
+
+  searchEnd: () => ipcRenderer.invoke('searchEnd'),
 });
+
