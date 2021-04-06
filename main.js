@@ -27,3 +27,16 @@ ipcMain.handle('search', (_event, ...args) => {
 ipcMain.handle('searchEnd', (_event) => {
   browser.searchEnd();
 });
+
+ipcMain.handle('setExternalBrowser', (_event, ...args) => {
+  const browser = args[0];
+  if (browser === config.get('externalBrowser')) {
+    return;
+  }
+  config.set('externalBrowser', args[0]);
+  config.save();
+});
+
+ipcMain.handle('getExternalBrowser', (_event) => {
+  return config.get('externalBrowser');
+});

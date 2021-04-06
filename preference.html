@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <script src="preference.js"></script>
+  <title>Preferences</title>
+  <style>
+    fieldset {
+      border-radius: 0.25rem;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { background:  #333; color: #fff; }
+      fieldset { border: 1px solid #fff; }
+    }
+    @media (prefers-color-scheme: light) {
+      body { background:  #fff; color: #000; }
+      fieldset { border: 1px solid #333; }
+    }
+  </style>
+</head>
+<body>
+  <form>
+    <fieldset>
+      <legend>外部ブラウザ</legend>
+      <select name="externalBrowser" id="externalBrowser">
+        <option value="default">デフォルトブラウザ</option>
+        <option value="chrome">Chrome</option>
+        <option value="firefox">Firefox</option>
+        <option value="edge">Edge</option>
+        <option value="safari">Safari</option>
+      </select>
+    </fieldset>
+  </form>
+</body>
+</html>
