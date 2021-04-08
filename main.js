@@ -6,8 +6,8 @@ const config = require('./lib/config');
 const menu = require('./lib/menu');
 const browser = require('./lib/browser');
 
-app.on('ready', () => {
-  config.init();
+app.on('ready', async () => {
+  await config.init();
   menu.init();
   browser.init();
 });
