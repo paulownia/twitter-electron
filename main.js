@@ -4,12 +4,12 @@ const { app, ipcMain } = require('electron');
 
 const config = require('./lib/config');
 const menu = require('./lib/menu');
-const browser = require('./lib/browser');
+const view = require('./lib/view');
 
 app.on('ready', async () => {
   await config.init();
   menu.init();
-  browser.init();
+  view.init();
 });
 
 app.on('window-all-closed', () => {
@@ -17,15 +17,15 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  browser.showTimeLine();
+  view.showTimeLine();
 });
 
 ipcMain.handle('search', (_event, ...args) => {
-  browser.search(args[0]);
+  view.search(args[0]);
 });
 
 ipcMain.handle('searchEnd', (_event) => {
-  browser.searchEnd();
+  view.searchEnd();
 });
 
 ipcMain.handle('setExternalBrowser', (_event, ...args) => {
