@@ -17,7 +17,7 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  browser.init(true);
+  browser.showTimeLine();
 });
 
 ipcMain.handle('search', (_event, ...args) => {
