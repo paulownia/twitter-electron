@@ -21,11 +21,15 @@ app.on('activate', () => {
 });
 
 ipcMain.handle('search', (_event, ...args) => {
-  view.search(args[0]);
+  view.search(args[0], args[1]);
 });
 
 ipcMain.handle('searchEnd', (_event) => {
   view.searchEnd();
+});
+
+ipcMain.handle('getSearchType', (_event) => {
+  return view.searchType();
 });
 
 ipcMain.handle('setExternalBrowser', (_event, ...args) => {
