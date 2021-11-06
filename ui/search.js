@@ -1,6 +1,15 @@
 /* global api */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  const type = await api.getSearchType();
+
   const search = document.getElementById('search');
+  if (type === 'jumpUserPage') {
+    search.placeholder = 'Go User Page...';
+  } else if (type === 'findTopics') {
+    search.placeholder = 'Find Topic...';
+  } else {
+    search.value = type;
+  }
   search.focus();
 
   search.addEventListener('keypress', (e) => {
@@ -18,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const encoded = encodeURIComponent(raw);
 
-    api.search(encoded);
+    api.search(encoded, type);
     api.searchEnd();
     search.value = '';
   });
