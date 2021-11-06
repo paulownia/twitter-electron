@@ -9,7 +9,7 @@
   "devDependencies": {
     "electron": "^15.3.0",
     "electron-packager": "^15.1.0",
-    "eslint": "^7.23.0"
+    "eslint": "^8.2.0"
   },
   "engines": {
     "node": ">=14"
