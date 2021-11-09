@@ -28,10 +28,6 @@ ipcMain.handle('searchEnd', (_event) => {
   view.searchEnd();
 });
 
-ipcMain.handle('getSearchType', (_event) => {
-  return view.searchType();
-});
-
 ipcMain.handle('setExternalBrowser', (_event, ...args) => {
   const browser = args[0];
   if (browser === config.get('externalBrowser')) {
