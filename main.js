@@ -9,7 +9,7 @@ const view = require('./lib/view');
 app.on('ready', async () => {
   await config.init();
   menu.init();
-  view.init();
+  view.timelineView.loadHomePage();
 });
 
 app.on('window-all-closed', () => {
@@ -17,19 +17,19 @@ app.on('window-all-closed', () => {
 });
 
 app.on('activate', () => {
-  view.showTimeLine();
+  view.timelineView.show();
 });
 
 ipcMain.handle('search', (_event, ...args) => {
-  view.search(args[0], args[1]);
+  view.timelineView.search(args[0], args[1]);
 });
 
 ipcMain.handle('searchEnd', (_event) => {
-  view.searchEnd();
+  view.searchView.close();
 });
 
 ipcMain.handle('getSearchType', (_event) => {
-  return view.searchType();
+  return view.searchView.searchType;
 });
 
 ipcMain.handle('setExternalBrowser', (_event, ...args) => {
