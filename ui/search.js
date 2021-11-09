@@ -1,6 +1,7 @@
 /* global api */
 document.addEventListener('DOMContentLoaded', async () => {
-  const type = await api.getSearchType();
+  const params = new URLSearchParams(location.search);
+  const type = params.get('type');
 
   const search = document.getElementById('search');
   if (type === 'jumpUserPage') {
