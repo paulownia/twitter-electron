@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   search.focus();
 
   search.addEventListener('keypress', (e) => {
-    if (e.keyCode !== 13) {  // enter
+    if (e.key !== 'Enter') {
       return;
     }
 
