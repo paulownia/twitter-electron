@@ -4,6 +4,7 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
+    "electron-context-menu": "^3.6.1",
     "open": "^8.0.5"
   },
   "devDependencies": {
