@@ -8,7 +8,7 @@
     "open": "^8.0.5"
   },
   "devDependencies": {
-    "electron": "^24.7.1",
+    "electron": "^26.2.1",
     "electron-packager": "^17.1.1",
     "eslint": "^8.2.0"
   },
