@@ -13,7 +13,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
   search.focus();
 
-  search.addEventListener('keypress', (e) => {
+  search.addEventListener('keydown', (e) => {
+    // ignore IME composition
+    if (event.isComposing || event.keyCode === 229) {
+      return;
+    }
+
+    // Keypress event cannot handle Esc key, so use keydown instead.
+    if (e.key === 'Escape' && search.value === '') {
+      api.searchEnd();
+      return;
+    }
+
     if (e.key !== 'Enter') {
       return;
     }
