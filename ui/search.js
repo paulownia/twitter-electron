@@ -24,9 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       api.searchEnd();
       return;
     }
-  });
 
-  search.addEventListener('keypress', (e) => {
     if (e.key !== 'Enter') {
       return;
     }
