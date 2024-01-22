@@ -1,6 +1,6 @@
 {
   "name": "Tweetron",
-  "version": "1.8.0-dev",
+  "version": "1.8.0",
   "description": "",
   "main": "main.js",
   "dependencies": {
