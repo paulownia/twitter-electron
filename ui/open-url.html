@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Open X URL</title>
+  <script src="open-url.js"></script>
+  <style>
+    :root {
+      font-family: 'BlinkMacSystemFont', '.SFNSDisplay-Regular','Meiryo UI', sans-serif;
+      color-scheme: light dark;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { background:  #333; color: #fff; }
+    }
+    @media (prefers-color-scheme: light) {
+      body { background:  #fff; color: #000; }
+    }
+    body {
+      padding: 0.5em;
+    }
+    div {
+      margin: 0.5em auto;
+      padding: 0;
+    }
+    #inputs {
+      text-align: center;
+    }
+    #inputs input {
+      width: 90%;
+      font-size: 100%;
+      font-family: 'BlinkMacSystemFont', '.SFNSDisplay-Regular','Meiryo UI', sans-serif;
+    }
+    #buttons {
+      text-align: right;
+    }
+    #buttons input {
+      margin-left: 0.5em;
+      font-family: 'BlinkMacSystemFont', '.SFNSDisplay-Regular','Meiryo UI', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <form>
+    <div id="title">
+      <span>X URL:</span>
+    </div>
+    <div id="inputs">
+      <input id="prompt" type="url">
+    </div>
+    <div id="buttons">
+      <input id="cancel" type="button" value="Cancel">
+      <input id="open" type="button" value="Open">
+    </div>
+  </form>
+</body>
+</html>
