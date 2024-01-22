@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const packager = require('@electron/packager');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -17,5 +18,9 @@ packager({
     appleIdPassword: process.env.APPLE_ID_PASSWORD,
     teamId: process.env.APPLE_TEAM_ID,
   }
+}).then((res) => {
+  console.log(res);
+}).catch((err) => {
+  console.error(err);
 });
 
