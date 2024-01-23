@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const packager = require('@electron/packager');
+const { packager } = require('@electron/packager');
 const dotenv = require('dotenv');
 dotenv.config();
 
