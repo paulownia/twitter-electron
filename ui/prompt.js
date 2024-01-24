@@ -68,6 +68,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, true);
 
+  // Focus the prompt input
   const prompt = document.getElementById('prompt');
   prompt.focus();
+
+  // Prevent implicit submission
+  document.addEventListener('submit', (e) => e.preventDefault());
 });
