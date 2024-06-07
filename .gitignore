@@ -1,5 +1,7 @@
 node_modules/
-Tweetron-darwin-x64/
-Tweetron-darwin-arm64/
+dist/
 
 .env
+
+.DS_Store
+
