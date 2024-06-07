@@ -14,7 +14,7 @@
     "eslint": "^8.2.0"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "scripts": {
     "start": "electron .",
