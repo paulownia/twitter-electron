@@ -20,7 +20,7 @@
     "start": "electron .",
     "package": "npm run clean && npm run build",
     "clean": "rm -rf dist",
-    "build": "node build.js",
+    "build": "node build.mjs",
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

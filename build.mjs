@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
-const { packager } = require('@electron/packager');
-const dotenv = require('dotenv');
+import { packager } from '@electron/packager';
+import dotenv from 'dotenv';
 dotenv.config();
 
 packager({
