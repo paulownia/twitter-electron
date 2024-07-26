@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <script src="preference.js"></script>
+  <script src="preference.js" defer></script>
   <title>Preferences</title>
   <style>
     :root {
@@ -11,6 +11,7 @@
     }
     fieldset {
       border-radius: 0.25rem;
+      margin-bottom: 1rem;
     }
     @media (prefers-color-scheme: dark) {
       body { background:  #333; color: #fff; }
@@ -32,6 +33,13 @@
         <option value="firefox">Firefox</option>
         <option value="microsoft edge">Edge</option>
         <option value="safari">Safari</option>
+      </select>
+    </fieldset>
+
+    <fieldset>
+      <legend>キャッシュ</legend>
+      <output name="cacheSize" id="cacheSize"></output> MB
+      <button type="button" id="cacheClear">キャッシュをクリア</button>
       </select>
     </fieldset>
   </form>
