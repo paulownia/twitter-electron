@@ -1,5 +1,6 @@
 /* global api */
-document.addEventListener('DOMContentLoaded', async () => {
+(async () => {
+  // デフォルトブラウザ
   const externalBrowser = document.getElementById('externalBrowser');
 
   externalBrowser.addEventListener('change', async (e) => {
@@ -12,4 +13,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (defaultVal) {
     externalBrowser.value = defaultVal;
   }
-});
+
+  // キャッシュ
+  const cacheSize = document.getElementById('cacheSize');
+  const cacheSizeValue = await api.getCacheSize();
+  cacheSize.value = (cacheSizeValue / 1024 / 1024).toFixed(2);
+
+  const cacheClear = document.getElementById('cacheClear');
+  cacheClear.addEventListener('click', async (e) => {
+    e.preventDefault();
+    await api.clearCache();
+    const cacheSizeValue = await api.getCacheSize();
+    cacheSize.value = (cacheSizeValue / 1024 / 1024).toFixed(2);
+  });
+})();
+
+

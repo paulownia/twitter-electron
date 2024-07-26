@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <script src="preference.js"></script>
+  <script src="preference.js" defer></script>
   <title>Preferences</title>
   <style>
     :root {
@@ -11,6 +11,7 @@
     }
     fieldset {
       border-radius: 0.25rem;
+      margin-bottom: 1rem;
     }
     @media (prefers-color-scheme: dark) {
       body { background:  #333; color: #fff; }
@@ -19,6 +20,15 @@
     @media (prefers-color-scheme: light) {
       body { background:  #fff; color: #000; }
       fieldset { border: 1px solid #333; }
+    }
+    .box {
+      display: flex;
+    }
+    .start {
+      margin-inline-end: auto
+    }
+    .end {
+      margin-inline-start: auto
     }
   </style>
 </head>
@@ -33,6 +43,14 @@
         <option value="microsoft edge">Edge</option>
         <option value="safari">Safari</option>
       </select>
+    </fieldset>
+
+    <fieldset>
+      <legend>キャッシュ</legend>
+      <div class="box">
+        <span class="start"><output name="cacheSize" id="cacheSize" class="start"></output> MB</span>
+        <button type="button" id="cacheClear" class="end">キャッシュをクリア</button>
+      </div>
     </fieldset>
   </form>
 </body>
