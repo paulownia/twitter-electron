@@ -21,6 +21,15 @@
       body { background:  #fff; color: #000; }
       fieldset { border: 1px solid #333; }
     }
+    .box {
+      display: flex;
+    }
+    .start {
+      margin-inline-end: auto
+    }
+    .end {
+      margin-inline-start: auto
+    }
   </style>
 </head>
 <body>
@@ -38,9 +47,10 @@
 
     <fieldset>
       <legend>キャッシュ</legend>
-      <output name="cacheSize" id="cacheSize"></output> MB
-      <button type="button" id="cacheClear">キャッシュをクリア</button>
-      </select>
+      <div class="box">
+        <span class="start"><output name="cacheSize" id="cacheSize" class="start"></output> MB</span>
+        <button type="button" id="cacheClear" class="end">キャッシュをクリア</button>
+      </div>
     </fieldset>
   </form>
 </body>
