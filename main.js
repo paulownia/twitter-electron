@@ -1,1 +1,1 @@
-require('./lib/boot.js');
+import('./lib/boot.js');

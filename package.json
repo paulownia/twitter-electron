@@ -3,6 +3,7 @@
   "version": "1.10.0",
   "description": "",
   "main": "main.js",
+  "type": "module",
   "dependencies": {
     "electron-context-menu": "^3.6.1",
     "open": "^8.0.5"
@@ -20,7 +21,7 @@
     "start": "electron .",
     "package": "npm run clean && npm run build",
     "clean": "rm -rf dist",
-    "build": "node build.mjs",
+    "build": "node build.js",
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
