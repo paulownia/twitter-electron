@@ -60,8 +60,7 @@ body.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     e.preventDefault();
     cancelButton.click();
-  }
-  if (e.key === 'Enter' && e.shiftKey) {
+  } else if (e.key === 'Enter' && !e.isComposing) {
     e.preventDefault();
     okButton.click();
   }
