@@ -9,6 +9,10 @@ const acceptableTypes = [
   'number',
 ];
 
+const okButton = document.getElementById('ok');
+const cancelButton = document.getElementById('cancel');
+const inputField = document.getElementById('prompt');
+
 try {
   const url = new URL(window.location.href);
   const params = new URLSearchParams(url.search);
@@ -18,36 +22,42 @@ try {
     document.title = title;
     document.querySelector('#title span').textContent = title + ':';
   }
-
-  const defaultValue = params.get('defaultValue');
-  if (defaultValue) {
-    document.getElementById('prompt').setAttribute('value', defaultValue);
-  }
-  const placeholder = params.get('placeholder');
-  if (placeholder) {
-    document.getElementById('prompt').setAttribute('placeholder', placeholder);
-  }
   const okLabel = params.get('okLabel');
   if (okLabel) {
-    document.getElementById('ok').setAttribute('value', okLabel);
+    okButton.setAttribute('value', okLabel);
   }
   const cancelLabel = params.get('cancelLabel');
   if (cancelLabel) {
-    document.getElementById('cancel').setAttribute('value', cancelLabel);
+    cancelButton.setAttribute('value', cancelLabel);
   }
+
   const promptType = params.get('promptType');
   if (acceptableTypes.includes(promptType)) {
-    document.getElementById('prompt').setAttribute('type', promptType);
+    inputField.setAttribute('type', promptType);
+  }
+  const defaultValue = params.get('defaultValue');
+  if (defaultValue) {
+    inputField.value = defaultValue;
+  }
+  const placeholder = params.get('placeholder');
+  if (placeholder) {
+    inputField.setAttribute('placeholder', placeholder);
+  }
+  const selected = params.get('selected');
+  if (selected === 'true') {
+    inputField.select();
+  } else {
+    const len = inputField.value.length;
+    if (len > 0) {
+      inputField.setSelectionRange(len, len);
+    }
   }
 } catch (e) {
   // ignore
 }
 
-const okButton = document.getElementById('ok');
-const cancelButton = document.getElementById('cancel');
-
 okButton.addEventListener('click', async() => {
-  const value = document.getElementById('prompt').value;
+  const value = inputField.value;
   await api.promptComplete(value, 'ok');
 });
 
@@ -67,7 +77,6 @@ body.addEventListener('keydown', (e) => {
 }, true);
 
 // Focus the prompt input
-const prompt = document.getElementById('prompt');
 prompt.focus();
 
 // Prevent implicit submission
