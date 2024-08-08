@@ -1,4 +1,5 @@
 /* global api */
+/// <reference path="../lib/preload/preference.d.ts" />
 (async () => {
   // デフォルトブラウザ
   const externalBrowser = document.getElementById('externalBrowser');

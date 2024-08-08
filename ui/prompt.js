@@ -1,4 +1,5 @@
 /* global api */
+/// <reference path="../lib/preload/prompt.d.ts" />
 const acceptableTypes = [
   'text',
   'url',
