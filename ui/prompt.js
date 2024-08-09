@@ -78,7 +78,7 @@ body.addEventListener('keydown', (e) => {
 }, true);
 
 // Focus the prompt input
-prompt.focus();
+inputField.focus();
 
 // Prevent implicit submission
 document.addEventListener('submit', (e) => e.preventDefault());
