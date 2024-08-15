@@ -10,9 +10,11 @@
   },
   "devDependencies": {
     "@electron/packager": "^18.1.1",
+    "@eslint/js": "^9.9.0",
     "dotenv": "^16.3.1",
     "electron": "^31.2.1",
-    "eslint": "^8.2.0"
+    "eslint": "^9.9.0",
+    "globals": "^15.9.0"
   },
   "engines": {
     "node": ">=20"
@@ -23,6 +25,7 @@
     "clean": "rm -rf dist",
     "build": "node build.js",
     "lint": "eslint .",
+    "format": "eslint --fix .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

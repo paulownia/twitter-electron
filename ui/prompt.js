@@ -53,7 +53,7 @@ try {
       inputField.setSelectionRange(len, len);
     }
   }
-} catch (e) {
+} catch (_e) {
   // ignore
 }
 
