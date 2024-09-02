@@ -1,4 +1,5 @@
 import pluginJs from '@eslint/js';
+import stylisticJs from '@stylistic/eslint-plugin-js';
 import globals from 'globals';
 
 export default [
@@ -12,6 +13,9 @@ export default [
   },
   pluginJs.configs.recommended,
   {
+    plugins: {
+      '@stylistic/js': stylisticJs,
+    },
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -37,6 +41,7 @@ export default [
       'space-before-blocks': 2,
       'space-in-parens': 2,
       'keyword-spacing': 2,
+      'object-curly-spacing': ['error', 'always',  { 'objectsInObjects': false }],
     },
   },
 ];
