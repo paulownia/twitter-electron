@@ -30,8 +30,5 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
-  "volta": {
-    "node": "18.20.3"
-  }
+  "license": "ISC"
 }
