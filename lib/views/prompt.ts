@@ -1,20 +1,26 @@
 import { BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
+import { fileURLToPath } from 'url';
+import { log } from '../log.js';
 
-const __filename = new URL(import.meta.url).pathname;
+const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 export class PromptView {
-  init(parent) {
+  private view: BrowserWindow | null = null;
+
+  init(parent: BrowserWindow | null) {
+    log.info(`__dirname=${__dirname}`);
+    log.info(`__filename=${__filename}`)
+
     this.view = new BrowserWindow({
-      parent: parent,
-      toolbar: false,
+      parent: parent || undefined,
       width: parent ? parent.getSize()[0] - 16 : 480,
       height: 180,
       show: false,
       resizable: false,
       center: true,
-      modal: parent ? true : false,
+      modal: !!parent,
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
@@ -24,17 +30,17 @@ export class PromptView {
     this.view.on('close', () => this.view = null);
   }
 
-  show(parent, options = {}) {
+  show(parent: BrowserWindow | null, options: Record<string, string> = {}): Promise<string> {
     if (!this.view) {
       this.init(parent);
     }
 
-    this.view.loadFile('ui/prompt.html', {
+    this.view!.loadFile('ui/prompt.html', {
       query: options,
     });
 
-    this.view.once('ready-to-show', () => {
-      this.view.show();
+    this.view!.once('ready-to-show', () => {
+      this.view!.show();
     });
 
     return new Promise((resolve, reject) => {
@@ -51,7 +57,7 @@ export class PromptView {
 
   close() {
     ipcMain.removeHandler('prompt-complete');
-    this.view.close();
+    this.view?.close();
     this.view = null;
   }
 }

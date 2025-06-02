@@ -30,7 +30,7 @@ const customCSSRules = `
  * @param {URL} url
  * @returns {URL|null} フィルタが追加された新しいURLオブジェクト、追加する必要がない（＝検索URLではない、既に追加されている）場合はnull
  */
-function addSpamFilterToQuery(url) {
+function addSpamFilterToQuery(url: URL): URL | null {
   if (url.pathname.startsWith('/i/api/graphql/')) {
     return addSpamFilterToQueryForSearchApi(url);
   } else if (url.pathname.startsWith('/search')) {
@@ -45,8 +45,9 @@ function addSpamFilterToQuery(url) {
  * @param {URL} url
  * @returns {URL|null}
  */
-function addSpamFilterToQueryForSearchApi(url) {
+function addSpamFilterToQueryForSearchApi(url: URL): URL | null {
   const rawParamVariables = url.searchParams.get('variables');
+  if (!rawParamVariables) return null;
   const paramVariables = decodeURIComponent(rawParamVariables);
 
   const variables = JSON.parse(paramVariables);
@@ -62,7 +63,7 @@ function addSpamFilterToQueryForSearchApi(url) {
 
   log.info(`rewrite graphql query, variables=${newParamVariables}`);
 
-  const newUrl = new URL(url);
+  const newUrl = new URL(url.toString());
   newUrl.searchParams.set('variables', newParamVariables);
   return newUrl;
 }
@@ -72,7 +73,7 @@ function addSpamFilterToQueryForSearchApi(url) {
  * @param {URL} url
  * @returns {URL|null}
  */
-function addSpamFilterToQueryForSearchWeb(url) {
+function addSpamFilterToQueryForSearchWeb(url: URL): URL | null {
   const q = url.searchParams.get('q');
   if (!q) {
     return null;
@@ -84,12 +85,17 @@ function addSpamFilterToQueryForSearchWeb(url) {
 
   log.info(`rewrite search query, q=${newQ}`);
 
-  const newUrl = new URL(url);
+  const newUrl = new URL(url.toString());
   newUrl.searchParams.set('q', newQ);
-  return url;
+  return newUrl;
 }
 
 export class TimelineView {
+  private view: BrowserWindow | null = null;
+  public getView(): BrowserWindow | null {
+    return this.view;
+  }
+
   init() {
     if (this.view) {
       return;
@@ -112,7 +118,7 @@ export class TimelineView {
       }
     });
     this.view.webContents.on('did-finish-load', () => {
-      this.view.webContents.insertCSS(customCSSRules);
+      this.view!.webContents.insertCSS(customCSSRules);
     });
     this.view.webContents.on('before-input-event', (e, input) => {
       if (input.meta && input.type === 'keyDown' && input.key === 'ArrowLeft') {
@@ -137,14 +143,14 @@ export class TimelineView {
 
   initContextMenu() {
     contextMenu({
-      window: this.view,
+      window: this.view ?? undefined,
       menu: (defaultActions, params, _browserWindow, dictionarySuggestions) => [
         dictionarySuggestions.length > 0 && defaultActions.separator(),
         ...dictionarySuggestions,
         defaultActions.separator(),
-        defaultActions.learnSpelling(),
+        defaultActions.learnSpelling({}),
         defaultActions.separator(),
-        defaultActions.lookUpSelection(),
+        defaultActions.lookUpSelection({}),
         defaultActions.separator(),
         {
           label: 'Search in X',
@@ -155,11 +161,11 @@ export class TimelineView {
             this.loadXPage(url);
           },
         },
-        defaultActions.searchWithGoogle(),
+        defaultActions.searchWithGoogle({}),
         defaultActions.separator(),
-        defaultActions.cut(),
-        defaultActions.copy(),
-        defaultActions.paste(),
+        defaultActions.cut({}),
+        defaultActions.copy({}),
+        defaultActions.paste({}),
         // shouldShowSelectAll && defaultActions.selectAll(),
         defaultActions.separator(),
         {
@@ -185,8 +191,8 @@ export class TimelineView {
         // options.showSaveVideoAs && defaultActions.saveVideoAs(),
         //options.showCopyVideoAddress && defaultActions.copyVideoAddress(),
         defaultActions.separator(),
-        defaultActions.copyLink(),
-        defaultActions.saveLinkAs(),
+        defaultActions.copyLink({}),
+        (defaultActions as any).saveLinkAs(), // .d.tsに設定が漏れているようだ。型エラー回避のため any を使う
         defaultActions.separator(),
         defaultActions.inspect(),
         defaultActions.services(),
@@ -198,29 +204,29 @@ export class TimelineView {
   show() {
     if (!this.view) {
       this.init();
-      this.view.loadURL(`${baseURL}/`);
+      this.view!.loadURL(`${baseURL}/`);
     }
   }
 
-  loadRawURL(url) {
+  loadRawURL(url: string) {
     if (isTwitterURL(url)) {
-      this.view.loadURL(url);
+      this.view!.loadURL(url);
     }
   }
 
 
-  loadXPage(url) {
+  loadXPage(url: string) {
     if (!this.view) {
       this.init();
     }
-    this.view.loadURL(`${baseURL}${url}`);
+    this.view!.loadURL(`${baseURL}${url}`);
   }
 
-  loadSearchPage(keyword) {
+  loadSearchPage(keyword: string) {
     this.loadXPage(`/search?q=${keyword}&f=live`);
   }
 
-  loadUserPage(id) {
+  loadUserPage(id: string) {
     if (invalidIds.has(id)) {
       return;
     }
@@ -239,15 +245,26 @@ export class TimelineView {
 
   goBack() {
     if (!this.view) return;
-    ($ => $.canGoBack() && $.goBack())(this.view.webContents);
+    const { navigationHistory } = this.view.webContents;
+    if (!navigationHistory || !navigationHistory.canGoBack()) {
+      return;
+    }
+    navigationHistory.goBack();
   }
 
   goForward() {
     if (!this.view) return;
-    ($ => $.canGoForward() && $.goForward())(this.view.webContents);
+    const { navigationHistory } = this.view.webContents;
+    if (!navigationHistory || !navigationHistory.canGoForward()) {
+      return;
+    }
+    navigationHistory.goForward();
   }
 
   saveWindowPosition() {
+    if (!this.view) {
+      return;
+    }
     const a = this.view.getBounds();
     const b = config.get('windowBounds');
     if (!b || a.x !== b.x || a.y !== b.y || a.width !== b.width || a.height !== b.height) {
@@ -281,7 +298,7 @@ export class TimelineView {
    * @param keyword 検索キーワード
    * @param type 検索タイプ
    */
-  search(keyword, type) {
+  search(keyword: string, type: string) {
     switch (type) {
     case 'findTopics':
       this.loadSearchPage(keyword);
@@ -292,3 +309,4 @@ export class TimelineView {
     }
   }
 }
+

@@ -3,12 +3,13 @@ import fs from 'fs/promises';
 import path from 'path';
 import { log } from './log.js';
 
-let data = {};
+let data: Record<string, any> = {};
 
 let changed = false;
 
 async function load() {
   const configFile = path.join(app.getPath('userData'), 'config.json');
+  log.info(`config file: ${configFile}`);
   try {
     const file = await fs.readFile(configFile, { encoding: 'utf8' });
     if (!file) {
@@ -38,12 +39,12 @@ export const config = {
   init: () => load(),
 
   flush: () => {
-    changed ? save() : Promise.resolve();
+    return changed ? save() : Promise.resolve();
   },
 
-  get: (key) => data[key],
+  get: (key: string) => data[key],
 
-  set: (key, value) => {
+  set: (key: string, value: any) => {
     data[key] = value;
     changed = true;
   },

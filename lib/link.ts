@@ -3,14 +3,11 @@ import open from 'open';
 import { config } from './config.js';
 import { log } from './log.js';
 
-/**
- * Open URL with external browser asynchronously.
- * @param {string} url
- * @returns {Promise<void>}
- */
-export async function openWithExternalBrowser(url) {
+// Open a URL with the external browser asynchronously
+export async function openWithExternalBrowser(url: string): Promise<void> {
   if (typeof url !== 'string') {
     log.error(`Failed to open ${url} with external browser, Invalid type`);
+    return;
   }
   try {
     await openByString(url);
@@ -19,15 +16,15 @@ export async function openWithExternalBrowser(url) {
   }
 }
 
-function openByString(urlStr) {
+function openByString(urlStr: string): Promise<void> {
   try {
     return openByURL(new URL(urlStr));
-  } catch (error) {
+  } catch (error: any) {
     return fail(`Failed to open '${urlStr}' as url; ${error.message}`);
   }
 }
 
-function openByURL(url) {
+function openByURL(url: URL): Promise<void> {
   if (url.protocol !== 'http:' && url.protocol !== 'https:') {
     return fail(`Failed to open '${url}', Invalid HTTP URL`);
   }
@@ -36,23 +33,19 @@ function openByURL(url) {
     return shell.openExternal(url.toString())
       .catch(e => fail(`Failed to open '${url}' with default browser; ${e.message}\n`));
   } else {
-    const opt = { app: { name: open.apps[browser] || browser }};
+    const opt = { app: { name: (open.apps as any)?.[browser] || browser } };
     return open(url.toString(), opt)
+      .then(() => {})
       .catch(e => fail(`Failed to open '${url}' with ${browser}; ${e.message}\n`));
   }
 }
 
-function fail(message) {
+function fail(message: string): Promise<never> {
   return Promise.reject(new Error(message));
 }
 
-/**
- * Returns true if the given url is twitter's one
- *
- * @param {string|URL} url
- * @returns {boolean}
- */
-export function isTwitterURL(url) {
+// Returns true if the given url is a Twitter (X) url
+export function isTwitterURL(url: string | URL): boolean {
   if (!url) {
     return false;
   } else if (typeof url === 'string') {

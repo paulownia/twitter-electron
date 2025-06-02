@@ -1,9 +1,10 @@
-import { Menu, MenuItem } from 'electron';
+import { Menu, MenuItem, MenuItemConstructorOptions } from 'electron';
 
 import { event } from './event.js';
 
-export function initMenu() {
+export function initMenu(): void {
   const menu = Menu.getApplicationMenu();
+  if (!menu) return;
 
   // add history and navigation menu to menu bar
   menu.insert(4, menuHistory());
@@ -11,18 +12,18 @@ export function initMenu() {
 
   // add Preferences to Application Menu (0)
   const appMenu = menu.items[0].submenu;
-  appMenu.insert(2, new MenuItem({ type: 'separator' }));
-  appMenu.insert(2, menuPreferences());
+  appMenu?.insert(2, new MenuItem({ type: 'separator' }));
+  appMenu?.insert(2, menuPreferences());
 
   // add reset window
   const windowMenu = menu.items[6].submenu;
-  windowMenu.insert(1, menuResetWindowSize());
+  windowMenu?.insert(1, menuResetWindowSize());
 
   // apply changes
   Menu.setApplicationMenu(menu);
 }
 
-function menuHistory() {
+function menuHistory(): MenuItem {
   return new MenuItem({
     label: 'History',
     type: 'submenu',
@@ -31,25 +32,27 @@ function menuHistory() {
         label: 'Home',
         accelerator: 'Shift+Command+H',
         click: () => { event.emit('select-internal-link', '/home'); },
-      }, {
+      },
+      {
         label: 'Forward',
         accelerator: 'Command+]',
         click: () => { event.emit('select-forward'); },
-      }, {
+      },
+      {
         label: 'Back',
         accelerator: 'Command+[',
         click: () => { event.emit('select-back'); },
-      }, {
-        type: 'separator',
-      }, {
+      },
+      { type: 'separator' },
+      {
         label: 'Logout',
         click: () => { event.emit('select-logout'); },
       },
-    ]),
+    ] as MenuItemConstructorOptions[]),
   });
 }
 
-function menuNavigate() {
+function menuNavigate(): MenuItem {
   return new MenuItem({
     label: 'Navigate',
     type: 'submenu',
@@ -58,39 +61,36 @@ function menuNavigate() {
         label: 'Settings',
         type: 'normal',
         click: () => { event.emit('select-internal-link', '/settings'); },
-      }, {
+      },
+      {
         label: 'Connected Apps',
         type: 'normal',
         click: () => { event.emit('select-internal-link', '/settings/connected_apps'); },
-      }, {
-        type: 'separator',
-      }, {
+      },
+      { type: 'separator' },
+      {
         label: 'Topics...',
         type: 'normal',
         accelerator: 'Command+T',
-        click: (_menuItem, _browserWindow, _event) => {
-          event.emit('select-find-topics');
-        },
-      }, {
+        click: () => { event.emit('select-find-topics'); },
+      },
+      {
         label: 'User Page...',
         type: 'normal',
         accelerator: 'Command+U',
-        click: (_menuItem, _browserWindow, _event) => {
-          event.emit('select-go-user-page');
-        },
-      }, {
+        click: () => { event.emit('select-go-user-page'); },
+      },
+      {
         label: 'X URL...',
         type: 'normal',
         accelerator: 'Command+L',
-        click: (_menuItem, _browserWindow, _event) => {
-          event.emit('select-open-url');
-        },
+        click: () => { event.emit('select-open-url'); },
       },
-    ]),
+    ] as MenuItemConstructorOptions[]),
   });
 }
 
-function menuPreferences() {
+function menuPreferences(): MenuItem {
   return new MenuItem({
     label: 'Preferences',
     type: 'normal',
@@ -99,7 +99,7 @@ function menuPreferences() {
   });
 }
 
-function menuResetWindowSize() {
+function menuResetWindowSize(): MenuItem {
   return new MenuItem({
     label: 'Reset Size',
     type: 'normal',
