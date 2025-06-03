@@ -2,10 +2,10 @@
   "name": "Tweetron",
   "version": "2.2.3",
   "description": "",
-  "main": "main.js",
+  "main": "dist/main.js",
   "type": "module",
   "dependencies": {
-    "electron-context-menu": "^3.6.1",
+    "electron-context-menu": "^4.1.0",
     "open": "^8.0.5"
   },
   "devDependencies": {
@@ -15,16 +15,18 @@
     "dotenv": "^16.3.1",
     "electron": "^34.0.1",
     "eslint": "^9.9.0",
-    "globals": "^15.9.0"
+    "globals": "^15.9.0",
+    "typescript": "^5.8.3"
   },
   "engines": {
     "node": ">=20"
   },
   "scripts": {
-    "start": "electron .",
+    "compile": "tsc && cp -r lib/preload dist/lib",
+    "start": "npm run compile && electron .",
     "package": "npm run clean && npm run build",
     "clean": "rm -rf dist",
-    "build": "node build.js",
+    "build": "npm run compile && node build.js",
     "lint": "eslint .",
     "format": "eslint --fix .",
     "test": "echo \"Error: no test specified\" && exit 1"

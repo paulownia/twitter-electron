@@ -1,9 +1,7 @@
 import { app } from 'electron';
-
 import { config } from './config.js';
 import { initMenu } from './menu.js';
 import { timelineView } from './view.js';
-
 
 app.whenReady()
   .then(() => config.init())
@@ -22,3 +20,4 @@ app.on('window-all-closed', () => {
 app.on('will-quit', () => {
   config.flush();
 });
+

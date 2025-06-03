@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 packager({
-  out: 'dist',
+  out: 'build',
   dir: '.',
   overwrite: true,
   executableName: 'Tweetron',
@@ -18,6 +18,18 @@ packager({
     appleIdPassword: process.env.APPLE_ID_PASSWORD,
     teamId: process.env.APPLE_TEAM_ID,
   },
+  ignore: [
+    '.env',
+    '.env.*',
+    '.gitignore',
+    '.prototools',
+    '.vscode',
+    'README.md',
+    'build.js',
+    'eslint.config.js',
+    'tsconfig.json',
+    '\\.ts$',
+  ],
 }).then((res) => {
   console.log(res);
 }).catch((err) => {

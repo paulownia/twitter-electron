@@ -15,7 +15,7 @@ event.on('select-forward', () => timelineView.goForward());
 event.on('select-back', () => timelineView.goBack());
 event.on('select-find-topics', () => {
   promptView
-    .show(timelineView.view, {
+    .show(timelineView.getView(), {
       title: 'Find Topics',
       placeholder: 'input keyword',
       okLabel: 'Find',
@@ -27,19 +27,19 @@ event.on('select-logout', () => timelineView.loadLogoutPage());
 event.on('select-preferences', () => preferenceView.show());
 event.on('select-go-user-page', () => {
   promptView
-    .show(timelineView.view, {
+    .show(timelineView.getView(), {
       title: 'Go User Page',
       placeholder: 'input user id',
       okLabel: 'Go',
       defaultValue: getDefaultValue(),
-      selected: true,
+      selected: 'true', // 型エラー回避のためtrueを文字列に
     })
     .then(id => timelineView.loadUserPage(id))
     .catch(() => {});
 });
 event.on('select-open-url', () => {
   promptView
-    .show(timelineView.view, {
+    .show(timelineView.getView(), {
       title: 'Open URL',
       defaultValue: getDefaultValueForOpenURL(),
       placeholder: 'input X URL',
