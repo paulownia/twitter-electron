@@ -1,10 +1,9 @@
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, clipboard } from 'electron';
 import contextMenu from 'electron-context-menu';
 import { screen } from 'electron/main';
 import { config } from '../config.js';
 import { isTwitterURL, openWithExternalBrowser } from '../link.js';
 import { log } from '../log.js';
-
 
 // twitter idとして使えない文字列、特殊なページのpathとなっているもの
 const invalidIds = new Set(['login', 'logout', 'search', 'home', 'notifications', 'messages', 'i', 'settings', 'account', 'explore', 'about', 'help', 'tos', 'privacy', 'jobs', 'download']);
@@ -168,6 +167,20 @@ export class TimelineView {
         defaultActions.paste({}),
         // shouldShowSelectAll && defaultActions.selectAll(),
         defaultActions.separator(),
+        {
+          label: 'Copy image ID',
+          visible: params.mediaType === 'image',
+          click: () => {
+            // URLの例 https://pbs.twimg.com/media/mediaID?format=jpg&name=orig
+            // mediaIdはpath最後のスラッシュ以降の部分
+            const mediaID = new URL(params.srcURL).pathname.split('/').at(-1);
+            if (mediaID) {
+              clipboard.writeText(mediaID);
+            } else {
+              log.error(`Failed to extract media ID from URL: ${params.srcURL}`);
+            }
+          },
+        },
         {
           label: 'Open image in external browser',
           visible: params.mediaType === 'image',
