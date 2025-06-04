@@ -1,18 +1,10 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
-import { fileURLToPath } from 'url';
-import { log } from '../log.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 export class PromptView {
   private view: BrowserWindow | null = null;
 
   init(parent: BrowserWindow | null) {
-    log.info(`__dirname=${__dirname}`);
-    log.info(`__filename=${__filename}`)
-
     this.view = new BrowserWindow({
       parent: parent || undefined,
       width: parent ? parent.getSize()[0] - 16 : 480,
@@ -24,7 +16,7 @@ export class PromptView {
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
-        preload: path.join(__dirname, '..', 'preload', 'prompt.js'),
+        preload: path.join(app.getAppPath(), 'preload/prompt.js'),
       },
     });
     this.view.on('close', () => this.view = null);

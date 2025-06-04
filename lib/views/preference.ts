@@ -1,11 +1,6 @@
-import { BrowserWindow, ipcMain } from 'electron';
+import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
-import { fileURLToPath } from 'url';
 import { config } from '../config.js';
-
-// __dirname for ESM
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // このviewで対応している設定項目
 const configKey: Record<string, string> = {
@@ -23,7 +18,7 @@ export class PreferenceView {
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
-        preload: path.join(__dirname, '..', 'preload', 'preference.js'), // 必要に応じて .ts へ
+        preload: path.join(app.getAppPath(), 'preload/preference.js'),
       },
     });
     this.view.on('closed', () => {

@@ -22,11 +22,9 @@
     "node": ">=20"
   },
   "scripts": {
-    "compile": "tsc && cp -r lib/preload dist/lib",
-    "start": "npm run compile && electron .",
-    "package": "npm run clean && npm run build",
-    "clean": "rm -rf dist",
-    "build": "npm run compile && node build.js",
+    "start": "tsc && electron .",
+    "clean": "rm -rf dist build",
+    "build": "npm run clean && tsc && node build.js",
     "lint": "eslint .",
     "format": "eslint --fix .",
     "test": "echo \"Error: no test specified\" && exit 1"
