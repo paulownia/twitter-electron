@@ -24,7 +24,7 @@ async function load() {
     const json = JSON.parse(file);
     Object.assign(data, json);
   } catch (e) {
-    log.warn(e);
+    log.error(e);
   }
 }
 

@@ -175,7 +175,7 @@ export class TimelineView {
             if (mediaID) {
               clipboard.writeText(mediaID);
             } else {
-              log.error(`Failed to extract media ID from URL: ${params.srcURL}`);
+              log.warn(`Failed to extract media ID from URL: ${params.srcURL}`);
             }
           },
         },

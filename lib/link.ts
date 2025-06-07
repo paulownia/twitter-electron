@@ -5,10 +5,6 @@ import { log } from './log.js';
 
 // Open a URL with the external browser asynchronously
 export async function openWithExternalBrowser(url: string): Promise<void> {
-  if (typeof url !== 'string') {
-    log.error(`Failed to open ${url} with external browser, Invalid type`);
-    return;
-  }
   try {
     await openByString(url);
   } catch (error) {
