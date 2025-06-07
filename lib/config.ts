@@ -7,6 +7,12 @@ let data: Record<string, any> = {};
 
 let changed = false;
 
+const ConfigKeys = [
+  'externalBrowser',
+  'windowBounds',
+] as const;
+type ConfigKey = typeof ConfigKeys[number];
+
 async function load() {
   const configFile = path.join(app.getPath('userData'), 'config.json');
   log.info(`config file: ${configFile}`);
@@ -42,9 +48,9 @@ export const config = {
     return changed ? save() : Promise.resolve();
   },
 
-  get: (key: string) => data[key],
+  get: (key: ConfigKey) => data[key],
 
-  set: (key: string, value: any) => {
+  set: (key: ConfigKey, value: any) => {
     data[key] = value;
     changed = true;
   },
