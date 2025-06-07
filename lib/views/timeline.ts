@@ -300,7 +300,7 @@ export class TimelineView {
     if (desktopSize.width > 1470) {
       bounds.width = 690;
     }
-    if (desktopSize.height > 1024) {
+    if (desktopSize.width > 1024) {
       bounds.x = desktopSize.width - bounds.width;
     }
     this.view.setBounds(bounds);
