@@ -22,7 +22,9 @@ event.on('select-find-topics', () => {
       okLabel: 'Find',
     })
     .then(keyword => timelineView.loadSearchPage(keyword))
-    .catch(() => {});
+    .catch(() => {
+      // ユーザがキャンセルした場合は何もしない
+    });
 });
 event.on('select-logout', () => timelineView.loadLogoutPage());
 event.on('select-preferences', () => preferenceView.show());
@@ -36,7 +38,9 @@ event.on('select-go-user-page', () => {
       selected: 'true', // 型エラー回避のためtrueを文字列に
     })
     .then(id => timelineView.loadUserPage(id))
-    .catch(() => {});
+    .catch(() => {
+      // ユーザがキャンセルした場合は何もしない
+    });
 });
 event.on('select-open-url', () => {
   promptView
@@ -48,9 +52,11 @@ event.on('select-open-url', () => {
       promptType: 'url',
     })
     .then(url => timelineView.loadRawURL(url))
-    .catch(() => {});
+    .catch(() => {
+      // ユーザがキャンセルした場合は何もしない
+    });
 });
-event.on('select-internal-link', url => timelineView.loadXPage(url));
+event.on('select-internal-link', (url: string) => timelineView.loadXPage(url));
 
 event.on('select-reset-window-size', () => {
   timelineView.resetWindowSize();

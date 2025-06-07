@@ -48,7 +48,7 @@ export class PreferenceView {
   }
 }
 
-ipcMain.handle('set-preference', (_event, key: string, value: any) => {
+ipcMain.handle('set-preference', (_event, key: string, value: unknown) => {
   if (!isValidConfigKey(key)) {
     throw new Error(`Unsupported key: ${key}`);
   }

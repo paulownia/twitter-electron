@@ -8,7 +8,9 @@ export const log = {
 
 function getPrinter(level: string): (message: any) => void {
   if (app.isPackaged) {
-    return () => {};
+    return () => {
+      // In packaged mode, do nothing for info logs
+    };
   } else {
     return (message: any) => print(message, level);
   }
@@ -30,7 +32,7 @@ function timestamp(): string {
 
   const y = now.getFullYear();
   const m = pad(now.getMonth() + 1);
-  const d = pad(now.getDate())
+  const d = pad(now.getDate());
   const h = pad(now.getHours());
   const min = pad(now.getMinutes());
   const sec = pad(now.getSeconds());

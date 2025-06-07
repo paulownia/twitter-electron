@@ -14,7 +14,7 @@ const unavailableUserIds = new Set([
   'tos',
   'privacy',
   'jobs',
-  'download'
+  'download',
 ]);
 
 export function isValidUserId(maybeUserId: string) {

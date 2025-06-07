@@ -22,5 +22,5 @@ export const event = {
   },
   emit: function (eventName: EventName, ...args: any[]) {
     eventEmitter.emit(eventName, ...args);
-  }
+  },
 } as const;

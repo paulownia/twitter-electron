@@ -203,6 +203,7 @@ export class TimelineView {
         //options.showCopyVideoAddress && defaultActions.copyVideoAddress(),
         defaultActions.separator(),
         defaultActions.copyLink({}),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (defaultActions as any).saveLinkAs(), // .d.tsに設定が漏れているようだ。型エラー回避のため any を使う
         defaultActions.separator(),
         defaultActions.inspect(),
@@ -271,7 +272,7 @@ export class TimelineView {
       return;
     }
     const a = this.view.getBounds();
-    const b = config.get('windowBounds');
+    const b = config.get('windowBounds') as { x: number, y: number, width: number, height: number } | undefined;
     if (!b || a.x !== b.x || a.y !== b.y || a.width !== b.width || a.height !== b.height) {
       config.set('windowBounds', a);
       config.persist();

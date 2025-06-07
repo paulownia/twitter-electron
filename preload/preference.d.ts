@@ -1,5 +1,5 @@
 declare global {
-  var api: PreferenceAPI
+  const api: PreferenceAPI;
 }
 
 export interface PreferenceAPI {

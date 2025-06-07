@@ -3,15 +3,13 @@ import fs from 'fs/promises';
 import path from 'path';
 import { log } from './log.js';
 
-let data: Record<string, any> = {};
+const data: Record<string, unknown> = {};
 
 let changed = false;
 
-const ConfigKeys = [
-  'externalBrowser',
-  'windowBounds',
-] as const;
-type ConfigKey = typeof ConfigKeys[number];
+type ConfigKey =
+  'externalBrowser' |
+  'windowBounds';
 
 async function load() {
   const configFile = path.join(app.getPath('userData'), 'config.json');
@@ -50,7 +48,7 @@ export const config = {
 
   get: (key: ConfigKey) => data[key],
 
-  set: (key: ConfigKey, value: any) => {
+  set: (key: ConfigKey, value: unknown) => {
     data[key] = value;
     changed = true;
   },
