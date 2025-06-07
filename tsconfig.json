@@ -17,11 +17,5 @@
   "include": [
     "main.ts",
     "lib/**/*.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "ui",
-    "**/*.test.ts"
   ]
 }
