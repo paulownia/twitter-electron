@@ -95,7 +95,7 @@ function menuPreferences(): MenuItem {
     label: 'Preferences',
     type: 'normal',
     accelerator: 'Command+,',
-    click: () => event.emit('select-preferences'),
+    click: () => { event.emit('select-preferences') },
   });
 }
 
