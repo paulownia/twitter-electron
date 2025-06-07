@@ -4,9 +4,9 @@ export const log = {
   error: (message: any) => print(message, 'E'),
   warn: (message: any) => print(message, 'W'),
   info: getPrinter('I'),
-};
+} as const;
 
-function getPrinter(level: string) {
+function getPrinter(level: string): (message: any) => void {
   if (app.isPackaged) {
     return () => {};
   } else {
