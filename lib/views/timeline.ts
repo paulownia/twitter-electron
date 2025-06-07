@@ -4,9 +4,7 @@ import { screen } from 'electron/main';
 import { config } from '../config.js';
 import { isTwitterURL, openWithExternalBrowser } from '../link.js';
 import { log } from '../log.js';
-
-// twitter idとして使えない文字列、特殊なページのpathとなっているもの
-const invalidIds = new Set(['login', 'logout', 'search', 'home', 'notifications', 'messages', 'i', 'settings', 'account', 'explore', 'about', 'help', 'tos', 'privacy', 'jobs', 'download']);
+import { isValidUserId } from '../user-id.js';
 
 const baseURL = 'https://x.com';
 
@@ -240,13 +238,7 @@ export class TimelineView {
   }
 
   loadUserPage(id: string) {
-    if (invalidIds.has(id)) {
-      return;
-    }
-    if (id.length < 3) { // 3文字以下のidは存在しない（はず）
-      return;
-    }
-    if (!id.match(/^[\w_]+$/)) { // 英数字とアンダースコア以外の文字が含まれている
+    if (!isValidUserId(id)) {
       return;
     }
     this.loadXPage(`/${id}`);

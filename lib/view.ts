@@ -5,6 +5,7 @@ import { isTwitterURL } from './link.js';
 import { PreferenceView } from './views/preference.js';
 import { PromptView } from './views/prompt.js';
 import { TimelineView } from './views/timeline.js';
+import { isValidUserId } from './user-id.js';
 
 const preferenceView = new PreferenceView();
 const promptView = new PromptView();
@@ -31,7 +32,7 @@ event.on('select-go-user-page', () => {
       title: 'Go User Page',
       placeholder: 'input user id',
       okLabel: 'Go',
-      defaultValue: getDefaultValue(),
+      defaultValue: getUserIdFromClipboard(),
       selected: 'true', // 型エラー回避のためtrueを文字列に
     })
     .then(id => timelineView.loadUserPage(id))
@@ -41,7 +42,7 @@ event.on('select-open-url', () => {
   promptView
     .show(timelineView.getView(), {
       title: 'Open URL',
-      defaultValue: getDefaultValueForOpenURL(),
+      defaultValue: getInternalURLFromClipboard(),
       placeholder: 'input X URL',
       okLabel: 'Open',
       promptType: 'url',
@@ -55,11 +56,26 @@ event.on('select-reset-window-size', () => {
   timelineView.resetWindowSize();
 });
 
-function getDefaultValue() {
-  return clipboard.readText();
+/**
+ * Clipboardの値がユーザIDとして妥当な場合はその値を返す。
+ * ユーザIDとして妥当でない場合は空文字列を返す。
+ * 先頭が@の場合は@を除去して返す。
+ * @return ユーザIDまたは空文字列
+ */
+function getUserIdFromClipboard(): string {
+  const text = clipboard.readText();
+  // 最初に@がついている場合は除去する
+  const cleanedText = text.startsWith('@') ? text.slice(1) : text;
+
+  return isValidUserId(cleanedText) ? cleanedText : '';
 }
 
-function getDefaultValueForOpenURL() {
+/**
+ * Clipboardの値がXのRLの場合はその値を返す。
+ * XのURLでない場合は空文字列を返す
+ * @return XのURLまたは空文字列。
+ */
+function getInternalURLFromClipboard(): string {
   const text = clipboard.readText();
   if (text && isTwitterURL(text)) {
     return text;
