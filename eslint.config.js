@@ -55,7 +55,6 @@ export default defineConfig([
       tseslint.configs.recommended,
     ],
     languageOptions: {
-      parser: tseslint.parser,
       parserOptions: {
         project: './tsconfig.json',
       },
