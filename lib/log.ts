@@ -1,20 +1,30 @@
 import { app } from 'electron';
 
 export const log = {
-  error: (message: any) => print(message, 'E'),
-  warn: (message: any) => print(message, 'W'),
+  error: (message: unknown) => {
+    if (message instanceof Error) {
+      print(`${message.name}: ${message.message}\n${message.stack}`, 'E');
+    } else if (typeof message === 'string') {
+      print(message, 'E');
+    } else {
+      print(`Unknown error: ${String(message)}`, 'E');
+    }
+  },
+  warn: (message: string) => print(message, 'W'),
   info: getPrinter('I'),
 } as const;
 
-function getPrinter(level: string): (message: any) => void {
+function getPrinter(level: string): (message: string) => void {
   if (app.isPackaged) {
-    return () => {};
+    return () => {
+      // In packaged mode, do nothing for info logs
+    };
   } else {
-    return (message: any) => print(message, level);
+    return (message: string) => print(message, level);
   }
 }
 
-function print(message: any, level: string) {
+function print(message: string, level: string) {
   process.stderr.write(`${level}\t${timestamp()}\t${message}\n`);
 }
 
@@ -30,7 +40,7 @@ function timestamp(): string {
 
   const y = now.getFullYear();
   const m = pad(now.getMonth() + 1);
-  const d = pad(now.getDate())
+  const d = pad(now.getDate());
   const h = pad(now.getHours());
   const min = pad(now.getMinutes());
   const sec = pad(now.getSeconds());

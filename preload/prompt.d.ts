@@ -1,5 +1,5 @@
 declare global {
-  var api: PromptAPI
+  const api: PromptAPI;
 }
 
 export interface PromptAPI {

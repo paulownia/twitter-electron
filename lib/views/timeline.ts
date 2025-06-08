@@ -5,6 +5,7 @@ import { config } from '../config.js';
 import { isTwitterURL, openWithExternalBrowser } from '../link.js';
 import { log } from '../log.js';
 import { isValidUserId } from '../user-id.js';
+import { equalBounds, defaultBounds } from '../bounds.js';
 
 const baseURL = 'https://x.com';
 
@@ -98,8 +99,8 @@ export class TimelineView {
       return;
     }
 
-    const bound = config.get('windowBounds') ?? { width: 480, height: 800, x: 50, y: 60 };
-    this.view = new BrowserWindow(bound);
+    const bounds = config.get('windowBounds') ?? defaultBounds;
+    this.view = new BrowserWindow(bounds);
 
     this.view.on('close', () => this.saveWindowPosition());
     this.view.on('close', () => this.view = null);
@@ -175,7 +176,7 @@ export class TimelineView {
             if (mediaID) {
               clipboard.writeText(mediaID);
             } else {
-              log.error(`Failed to extract media ID from URL: ${params.srcURL}`);
+              log.warn(`Failed to extract media ID from URL: ${params.srcURL}`);
             }
           },
         },
@@ -203,6 +204,7 @@ export class TimelineView {
         //options.showCopyVideoAddress && defaultActions.copyVideoAddress(),
         defaultActions.separator(),
         defaultActions.copyLink({}),
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (defaultActions as any).saveLinkAs(), // .d.tsに設定が漏れているようだ。型エラー回避のため any を使う
         defaultActions.separator(),
         defaultActions.inspect(),
@@ -272,7 +274,7 @@ export class TimelineView {
     }
     const a = this.view.getBounds();
     const b = config.get('windowBounds');
-    if (!b || a.x !== b.x || a.y !== b.y || a.width !== b.width || a.height !== b.height) {
+    if (!b || !equalBounds(a, b)) {
       config.set('windowBounds', a);
       config.persist();
     }

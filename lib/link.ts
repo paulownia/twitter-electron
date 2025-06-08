@@ -5,10 +5,6 @@ import { log } from './log.js';
 
 // Open a URL with the external browser asynchronously
 export async function openWithExternalBrowser(url: string): Promise<void> {
-  if (typeof url !== 'string') {
-    log.error(`Failed to open ${url} with external browser, Invalid type`);
-    return;
-  }
   try {
     await openByString(url);
   } catch (error) {
@@ -19,8 +15,8 @@ export async function openWithExternalBrowser(url: string): Promise<void> {
 function openByString(urlStr: string): Promise<void> {
   try {
     return openByURL(new URL(urlStr));
-  } catch (error: any) {
-    return fail(`Failed to open '${urlStr}' as url; ${error.message}`);
+  } catch (error) {
+    return fail(`Failed to open '${urlStr}' as url`, error);
   }
 }
 
@@ -31,16 +27,24 @@ function openByURL(url: URL): Promise<void> {
   const browser = config.get('externalBrowser');
   if (!browser || browser === 'default') {
     return shell.openExternal(url.toString())
-      .catch(e => fail(`Failed to open '${url}' with default browser; ${e.message}\n`));
+      .catch(e => fail(`Failed to open '${url}' with default browser;`, e));
   } else {
-    const opt = { app: { name: (open.apps as any)?.[browser] || browser } };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const opt = { app: { name: (open.apps as any)?.[browser] || browser }};  // open.appsの型定義が間違っているのでanyを使う
     return open(url.toString(), opt)
-      .then(() => {})
-      .catch(e => fail(`Failed to open '${url}' with ${browser}; ${e.message}\n`));
+      .then(() => {
+        // この処理は戻り値をPromise<void>にするために必要
+      })
+      .catch(e => fail(`Failed to open '${url}' with ${browser}`, e));
   }
 }
 
-function fail(message: string): Promise<never> {
+function fail(message: string, error?: unknown): Promise<never> {
+  if (error instanceof Error) {
+    message += `; ${error.message}`;
+  } else if (error) {
+    message += `; ${String(error)}`;
+  }
   return Promise.reject(new Error(message));
 }
 

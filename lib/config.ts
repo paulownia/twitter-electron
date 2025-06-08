@@ -2,16 +2,20 @@ import { app } from 'electron';
 import fs from 'fs/promises';
 import path from 'path';
 import { log } from './log.js';
+import { Bounds } from './bounds.js';
 
-let data: Record<string, any> = {};
+interface ConfigValue {
+  'externalBrowser': string | undefined;
+  'windowBounds': Bounds | undefined;
+}
+type ConfigKey = keyof ConfigValue;
+
+const data: { [K in ConfigKey]: ConfigValue[K] } = {
+  externalBrowser: undefined,
+  windowBounds: undefined,
+};
 
 let changed = false;
-
-const ConfigKeys = [
-  'externalBrowser',
-  'windowBounds',
-] as const;
-type ConfigKey = typeof ConfigKeys[number];
 
 async function load() {
   const configFile = path.join(app.getPath('userData'), 'config.json');
@@ -26,7 +30,7 @@ async function load() {
     const json = JSON.parse(file);
     Object.assign(data, json);
   } catch (e) {
-    log.warn(e);
+    log.error(e);
   }
 }
 
@@ -48,9 +52,9 @@ export const config = {
     return changed ? save() : Promise.resolve();
   },
 
-  get: (key: ConfigKey) => data[key],
+  get: <K extends ConfigKey>(key: K): ConfigValue[K] => data[key],
 
-  set: (key: ConfigKey, value: any) => {
+  set: <K extends ConfigKey>(key: K, value: Exclude<ConfigValue[K], undefined>) => {
     data[key] = value;
     changed = true;
   },
