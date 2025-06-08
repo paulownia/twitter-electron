@@ -13,39 +13,26 @@ export async function openWithExternalBrowser(url: string): Promise<void> {
 }
 
 function openByString(urlStr: string): Promise<void> {
-  try {
-    return openByURL(new URL(urlStr));
-  } catch (error) {
-    return fail(`Failed to open '${urlStr}' as url`, error);
-  }
+  return openByURL(new URL(urlStr));
 }
 
-function openByURL(url: URL): Promise<void> {
+async function openByURL(url: URL) {
   if (url.protocol !== 'http:' && url.protocol !== 'https:') {
-    return fail(`Failed to open '${url}', Invalid HTTP URL`);
+    throw new Error(`Failed to open '${url}', Invalid HTTP URL`);
   }
   const browser = config.get('externalBrowser');
-  if (!browser || browser === 'default') {
-    return shell.openExternal(url.toString())
-      .catch(e => fail(`Failed to open '${url}' with default browser;`, e));
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const opt = { app: { name: (open.apps as any)?.[browser] || browser }};  // open.appsの型定義が間違っているのでanyを使う
-    return open(url.toString(), opt)
-      .then(() => {
-        // この処理は戻り値をPromise<void>にするために必要
-      })
-      .catch(e => fail(`Failed to open '${url}' with ${browser}`, e));
-  }
-}
 
-function fail(message: string, error?: unknown): Promise<never> {
-  if (error instanceof Error) {
-    message += `; ${error.message}`;
-  } else if (error) {
-    message += `; ${String(error)}`;
+  try {
+    if (!browser || browser === 'default') {
+      await shell.openExternal(url.toString());
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const opt = { app: { name: (open.apps as any)?.[browser] || browser }};  // open.appsの型定義が間違っているのでanyを使う
+      await open(url.toString(), opt);
+    }
+  } catch (e: unknown) {
+    throw new Error(`Failed to open '${url}' with ${browser}`, { cause: e });
   }
-  return Promise.reject(new Error(message));
 }
 
 // Returns true if the given url is a Twitter (X) url
