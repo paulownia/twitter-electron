@@ -24,7 +24,7 @@ function openByURL(url: URL): Promise<void> {
   if (url.protocol !== 'http:' && url.protocol !== 'https:') {
     return fail(`Failed to open '${url}', Invalid HTTP URL`);
   }
-  const browser = config.get('externalBrowser') as string; // TODO fix type
+  const browser = config.get('externalBrowser');
   if (!browser || browser === 'default') {
     return shell.openExternal(url.toString())
       .catch(e => fail(`Failed to open '${url}' with default browser;`, e));

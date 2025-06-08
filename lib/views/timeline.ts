@@ -5,6 +5,7 @@ import { config } from '../config.js';
 import { isTwitterURL, openWithExternalBrowser } from '../link.js';
 import { log } from '../log.js';
 import { isValidUserId } from '../user-id.js';
+import { equalBounds, defaultBounds } from '../bounds.js';
 
 const baseURL = 'https://x.com';
 
@@ -98,8 +99,8 @@ export class TimelineView {
       return;
     }
 
-    const bound = config.get('windowBounds') ?? { width: 480, height: 800, x: 50, y: 60 };
-    this.view = new BrowserWindow(bound);
+    const bounds = config.get('windowBounds') ?? defaultBounds;
+    this.view = new BrowserWindow(bounds);
 
     this.view.on('close', () => this.saveWindowPosition());
     this.view.on('close', () => this.view = null);
@@ -272,8 +273,8 @@ export class TimelineView {
       return;
     }
     const a = this.view.getBounds();
-    const b = config.get('windowBounds') as { x: number, y: number, width: number, height: number } | undefined;
-    if (!b || a.x !== b.x || a.y !== b.y || a.width !== b.width || a.height !== b.height) {
+    const b = config.get('windowBounds');
+    if (!b || !equalBounds(a, b)) {
       config.set('windowBounds', a);
       config.persist();
     }

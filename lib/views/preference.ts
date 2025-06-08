@@ -2,13 +2,6 @@ import { BrowserWindow, ipcMain, app } from 'electron';
 import path from 'path';
 import { config } from '../config.js';
 
-const configKeys = ['externalBrowser'] as const;
-type ConfigKey = typeof configKeys[number];
-
-function isValidConfigKey(key: string): key is ConfigKey {
-  return configKeys.includes(key as ConfigKey);
-}
-
 export class PreferenceView {
   private view: BrowserWindow | null = null;
 
@@ -49,20 +42,17 @@ export class PreferenceView {
 }
 
 ipcMain.handle('set-preference', (_event, key: string, value: unknown) => {
-  if (!isValidConfigKey(key)) {
-    throw new Error(`Unsupported key: ${key}`);
-  }
-  if (config.get(key) === value) {
+  if (key === 'externalBrowser' && typeof value === 'string') {
+    config.set('externalBrowser', value);
+    config.persist();
     return;
   }
-  config.set(key, value);
-  config.persist();
+  throw new Error(`Unsupported key for config setter: ${key}`);
 });
 
 ipcMain.handle('get-preference', (_event, key: string) => {
-  if (!isValidConfigKey(key)) {
-    throw new Error(`Unsupported key: ${key}`);
+  if (key === 'externalBrowser') {
+    return config.get(key);
   }
-
-  return config.get(key);
+  throw new Error(`Unsupported key for config getter: ${key}`);
 });
