@@ -307,12 +307,12 @@ export class TimelineView {
    */
   search(keyword: string, type: string) {
     switch (type) {
-    case 'findTopics':
-      this.loadSearchPage(keyword);
-      break;
-    case 'jumpUserPage':
-      this.loadUserPage(keyword);
-      break;
+      case 'findTopics':
+        this.loadSearchPage(keyword);
+        break;
+      case 'jumpUserPage':
+        this.loadUserPage(keyword);
+        break;
     }
   }
 }
