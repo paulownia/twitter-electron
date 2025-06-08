@@ -26,8 +26,7 @@ async function openByURL(url: URL) {
     if (!browser || browser === 'default') {
       await shell.openExternal(url.toString());
     } else {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const opt = { app: { name: (open.apps as any)?.[browser] || browser }};  // open.appsの型定義が間違っているのでanyを使う
+      const opt = { app: { name: browser }};
       await open(url.toString(), opt);
     }
   } catch (e: unknown) {

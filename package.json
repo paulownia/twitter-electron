@@ -6,7 +6,7 @@
   "type": "module",
   "dependencies": {
     "electron-context-menu": "^4.1.0",
-    "open": "^8.0.5"
+    "open": "^10.1.2"
   },
   "devDependencies": {
     "@electron/packager": "^18.3.6",
