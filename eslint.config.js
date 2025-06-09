@@ -4,9 +4,13 @@ import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import { defineConfig } from 'eslint/config';
 
+// You can confirm this eslint configuration using following command:
+// npx eslint --inspect-config
+
 export default defineConfig([
-  // Base configuration
+  // Global ignore patterns (.git and node_modules are ignored by default)
   {
+    name: 'Global ignore patterns',
     ignores: [
       'build/',
       'dist/',
@@ -18,9 +22,12 @@ export default defineConfig([
     ],
   },
 
-  // ESLint recommended rules (apply to both .ts and .js files)
+  // ESLint recommended rules (apply to all files)
   eslint.configs.recommended,
+
+  // Custom rules for all files (apply to all files)
   {
+    name: 'Custom rules',
     rules: {
       'no-console': 1,
       'no-irregular-whitespace': 2,
@@ -29,7 +36,10 @@ export default defineConfig([
       'no-constant-condition': ['error', { 'checkLoops': false }],
     },
   },
+
+  // Stylistic rules (apply to all files)
   {
+    name: 'Stylistic rules',
     plugins: {
       '@stylistic': stylistic,
     },
@@ -48,6 +58,7 @@ export default defineConfig([
 
   // TypeScript rules (apply to .ts files only)
   {
+    name: 'TypeScript rules',
     files: ['**/*.ts'],
     extends: [
       // defineConfig使用時、この設定はextendsまたはdefineConfigの引数の配列要素として配置できる。
@@ -63,6 +74,10 @@ export default defineConfig([
       },
     },
     rules: {
+      // We should use @typescript-eslint/no-unused-vars instead of no-unused-vars for TypeScript files,
+      // because the original no-unused-vars rule does not work well with TypeScript.
+      // no-unused-vars is enabled by eslint.configs.recommended,
+      // but it is disabled by tseslint.configs.recommended, so we need to explicitly set it to off.
       '@typescript-eslint/no-unused-vars': ['error', {
         'argsIgnorePattern': '^_',
         'varsIgnorePattern': '^_',
@@ -73,6 +88,7 @@ export default defineConfig([
 
   // JavaScript rules (apply to .js files only)
   {
+    name: 'JavaScript rules',
     files: ['**/*.js'],
     languageOptions: {
       globals: {
