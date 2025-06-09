@@ -26,6 +26,7 @@
     "start": "tsc && electron .",
     "clean": "rm -rf dist build",
     "build": "npm run clean && tsc && node build.js",
+    "build:no-sign": "npm run clean && tsc && node build.js --no-sign",
     "lint": "eslint .",
     "format": "eslint --fix .",
     "test": "echo \"Error: no test specified\" && exit 1"
