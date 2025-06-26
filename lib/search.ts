@@ -1,6 +1,16 @@
 import { log } from './log.js';
 
 /**
+ * Twitter (X) の検索URLのパターン
+ */
+export const searchUrlList = [
+  'https://x.com/i/api/graphql/*/SearchTimeline?*',
+  'https://x.com/search?*',
+  'https://twitter.com/i/api/graphql/*/SearchTimeline?*',
+  'https://twitter.com/search?*',
+];
+
+/**
  * 指定したURLオブジェクトの検索クエリに、スパム（インプレゾンビ）避けのキーワードを追加する
  * @param {URL} url
  * @returns {URL|null} フィルタが追加された新しいURLオブジェクト、追加する必要がない（＝検索URLではない、既に追加されている）場合はnull

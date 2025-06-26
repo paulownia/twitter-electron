@@ -6,16 +6,9 @@ import { isTwitterURL, openWithExternalBrowser } from '../link.js';
 import { log } from '../log.js';
 import { isValidUserId } from '../user-id.js';
 import { equalBounds, defaultBounds } from '../bounds.js';
-import { addSpamFilterToQuery } from '../search.js';
+import { addSpamFilterToQuery, searchUrlList } from '../search.js';
 
 const baseURL = 'https://x.com';
-
-const searchURLs = [
-  'https://x.com/i/api/graphql/*/SearchTimeline?*',
-  'https://x.com/search?*',
-  'https://twitter.com/i/api/graphql/*/SearchTimeline?*',
-  'https://twitter.com/search?*',
-];
 
 const customCSSRules = `
   .r-1tl8opc { font-family:'Tsukushi A Round Gothic', '筑紫A丸ゴシック' !important }
@@ -63,7 +56,7 @@ export class TimelineView {
         this.goForward();
       }
     });
-    this.view.webContents.session.webRequest.onBeforeRequest({ urls: searchURLs }, (details, callback) => {
+    this.view.webContents.session.webRequest.onBeforeRequest({ urls: searchUrlList }, (details, callback) => {
       const url = new URL(details.url);
       const newURL = addSpamFilterToQuery(url);
       if (newURL) {
