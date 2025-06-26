@@ -15,9 +15,10 @@ const data: { [K in ConfigKey]: ConfigValue[K] } = {
   windowBounds: undefined,
 };
 
-async function load() {
-  const configFile = path.join(app.getPath('userData'), 'config.json');
-  log.info(`config file: ${configFile}`);
+const configFile = path.join(app.getPath('userData'), 'config.json');
+
+async function init() {
+  log.info(`Load config file: ${configFile}`);
   try {
     const file = await fs.readFile(configFile, { encoding: 'utf8' });
     if (!file) {
@@ -32,28 +33,50 @@ async function load() {
   }
 }
 
-async function save() {
-  const configFile = path.join(app.getPath('userData'), 'config.json');
+function get<K extends ConfigKey>(key: K): ConfigValue[K] {
+  return data[key];
+}
+
+function set<K extends ConfigKey>(key: K, value: Exclude<ConfigValue[K], undefined>): void {
+  data[key] = value;
+}
+
+function save(): Promise<void> {
+  log.info(`Save config file: ${configFile}`);
+  return doSerial(doSave);
+}
+
+function setAndSave<K extends ConfigKey>(key: K, value: Exclude<ConfigValue[K], undefined>): Promise<void> {
+  set(key, value);
+  return save();
+}
+
+let serialJobs: Promise<void> = Promise.resolve();
+let pending = false;
+
+function doSerial(job: () => Promise<void>): Promise<void> {
+  serialJobs = serialJobs.then(job).catch((e) => {
+    log.error(new Error('Failed to execute serial job', { cause: e }));
+  });
+  return serialJobs;
+}
+
+async function doSave(): Promise<void> {
+  if (pending) return Promise.resolve();
+  pending = true;
   try {
-    await fs.writeFile(configFile, JSON.stringify(data), { encoding: 'utf8' });
-  } catch (e) {
-    log.error(e);
+    return await fs.writeFile(configFile, JSON.stringify(data), { encoding: 'utf8' });
+  } finally {
+    pending = false;
   }
 }
 
+
 export const config = {
-  init: () => load(),
-
-  get: <K extends ConfigKey>(key: K): ConfigValue[K] => data[key],
-
-  set: <K extends ConfigKey>(key: K, value: Exclude<ConfigValue[K], undefined>) => {
-    data[key] = value;
-  },
-
-  save: () => save(),
-
-  setAndSave: <K extends ConfigKey>(key: K, value: Exclude<ConfigValue[K], undefined>) => {
-    data[key] = value;
-    return save();
-  },
+  // VSCodeの参照ジャンプ機能のためにプロパティ名を明示している
+  init: init,
+  get: get,
+  set: set,
+  save: save,
+  setAndSave: setAndSave,
 };
