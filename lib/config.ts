@@ -15,8 +15,6 @@ const data: { [K in ConfigKey]: ConfigValue[K] } = {
   windowBounds: undefined,
 };
 
-let changed = false;
-
 async function load() {
   const configFile = path.join(app.getPath('userData'), 'config.json');
   log.info(`config file: ${configFile}`);
@@ -37,10 +35,8 @@ async function load() {
 async function save() {
   const configFile = path.join(app.getPath('userData'), 'config.json');
   try {
-    changed = false;
     await fs.writeFile(configFile, JSON.stringify(data), { encoding: 'utf8' });
   } catch (e) {
-    changed = true;
     log.error(e);
   }
 }
@@ -48,16 +44,16 @@ async function save() {
 export const config = {
   init: () => load(),
 
-  flush: () => {
-    return changed ? save() : Promise.resolve();
-  },
-
   get: <K extends ConfigKey>(key: K): ConfigValue[K] => data[key],
 
   set: <K extends ConfigKey>(key: K, value: Exclude<ConfigValue[K], undefined>) => {
     data[key] = value;
-    changed = true;
   },
 
-  persist: () => save(),
+  save: () => save(),
+
+  setAndSave: <K extends ConfigKey>(key: K, value: Exclude<ConfigValue[K], undefined>) => {
+    data[key] = value;
+    return save();
+  },
 };

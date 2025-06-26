@@ -203,8 +203,7 @@ export class TimelineView {
     const a = this.view.getBounds();
     const b = config.get('windowBounds');
     if (!b || !equalBounds(a, b)) {
-      config.set('windowBounds', a);
-      config.persist();
+      config.setAndSave('windowBounds', a);
     }
   }
 
