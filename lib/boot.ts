@@ -1,5 +1,5 @@
 import { app } from 'electron';
-import { config } from './config.js';
+import config from './config.js';
 import { initMenu } from './menu.js';
 import { timelineView } from './view.js';
 

@@ -71,12 +71,13 @@ async function doSave(): Promise<void> {
   }
 }
 
-
-export const config = {
+const config = {
   // VSCodeの参照ジャンプ機能のためにプロパティ名を明示している
   init: init,
   get: get,
   set: set,
   save: save,
   setAndSave: setAndSave,
-};
+} as const;
+
+export default config;

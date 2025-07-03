@@ -1,7 +1,7 @@
 import { BrowserWindow, clipboard } from 'electron';
 import contextMenu from 'electron-context-menu';
 import { screen } from 'electron/main';
-import { config } from '../config.js';
+import config from '../config.js';
 import { isTwitterURL, openWithExternalBrowser } from '../link.js';
 import { log } from '../log.js';
 import { isValidUserId } from '../user-id.js';
