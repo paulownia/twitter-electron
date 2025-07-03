@@ -1,6 +1,6 @@
 import { app } from 'electron';
 
-export const log = {
+const log = {
   error: (message: unknown) => {
     if (message instanceof Error) {
       print(`${message.name}: ${message.message}\n${message.stack}`, 'E');
@@ -46,3 +46,5 @@ function timestamp(): string {
   const sec = pad(now.getSeconds());
   return `${y}-${m}-${d}T${h}:${min}:${sec}${tzSign}${tzHour}:${tzMin}`;
 }
+
+export default log;

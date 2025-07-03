@@ -1,7 +1,7 @@
 import { app } from 'electron';
 import fs from 'fs/promises';
 import path from 'path';
-import { log } from './log.js';
+import log from './log.js';
 import { Bounds } from './bounds.js';
 
 interface ConfigValue {
