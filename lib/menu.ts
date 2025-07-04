@@ -1,6 +1,6 @@
 import { Menu, MenuItem, MenuItemConstructorOptions } from 'electron';
 
-import { event } from './event.js';
+import event from './event.js';
 
 export function initMenu(): void {
   const menu = Menu.getApplicationMenu();

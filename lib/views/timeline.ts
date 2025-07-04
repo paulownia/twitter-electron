@@ -1,9 +1,9 @@
 import { BrowserWindow, clipboard } from 'electron';
 import contextMenu from 'electron-context-menu';
 import { screen } from 'electron/main';
-import { config } from '../config.js';
+import config from '../config.js';
+import log from '../log.js';
 import { isTwitterURL, openWithExternalBrowser } from '../link.js';
-import { log } from '../log.js';
 import { isValidUserId } from '../user-id.js';
 import { equalBounds, defaultBounds } from '../bounds.js';
 import { addSpamFilterToQuery, searchUrlList } from '../search.js';
@@ -203,8 +203,7 @@ export class TimelineView {
     const a = this.view.getBounds();
     const b = config.get('windowBounds');
     if (!b || !equalBounds(a, b)) {
-      config.set('windowBounds', a);
-      config.persist();
+      config.setAndSave('windowBounds', a);
     }
   }
 

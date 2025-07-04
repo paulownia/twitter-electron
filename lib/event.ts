@@ -16,11 +16,17 @@ interface EventArgs {
 
 type EventName = keyof EventArgs;
 
-export const event = {
-  on<K extends EventName>(eventName: K, listener: (...args: EventArgs[K]) => void): void {
-    eventEmitter.on(eventName, listener);
-  },
-  emit<K extends EventName>(eventName: K, ...args: EventArgs[K]): void {
-    eventEmitter.emit(eventName, ...args);
-  },
+function on<K extends EventName>(eventName: K, listener: (...args: EventArgs[K]) => void): void {
+  eventEmitter.on(eventName, listener);
+}
+
+function emit<K extends EventName>(eventName: K, ...args: EventArgs[K]): void {
+  eventEmitter.emit(eventName, ...args);
+}
+
+const event = {
+  on: on,
+  emit: emit,
 } as const;
+
+export default event;

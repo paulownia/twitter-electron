@@ -1,7 +1,7 @@
 import { shell } from 'electron';
 import open from 'open';
-import { config } from './config.js';
-import { log } from './log.js';
+import config from './config.js';
+import log from './log.js';
 
 // Open a URL with the external browser asynchronously
 export async function openWithExternalBrowser(url: string): Promise<void> {

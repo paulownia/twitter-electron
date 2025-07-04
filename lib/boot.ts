@@ -1,23 +1,19 @@
 import { app } from 'electron';
-import { config } from './config.js';
+import config from './config.js';
 import { initMenu } from './menu.js';
-import { timelineView } from './view.js';
+import { showDefaultView } from './view.js';
 
 app.whenReady()
   .then(() => config.init())
   .then(() => {
     initMenu();
-    timelineView.show();
+    showDefaultView();
     app.on('activate', () => {
-      timelineView.show();
+      showDefaultView();
     });
   });
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
-});
-
-app.on('will-quit', () => {
-  config.flush();
 });
 
