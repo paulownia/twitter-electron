@@ -9,7 +9,11 @@ import { isValidUserId } from './user-id.js';
 
 const preferenceView = new PreferenceView();
 const promptView = new PromptView();
-export const timelineView = new TimelineView();
+const timelineView = new TimelineView();
+
+export function showDefaultView() {
+  timelineView.show();
+}
 
 /** ショートカットとメニュー選択のハンドリング */
 event.on('select-forward', () => timelineView.goForward());
