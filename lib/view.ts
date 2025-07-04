@@ -1,6 +1,6 @@
 import { clipboard } from 'electron';
 
-import { event } from './event.js';
+import event from './event.js';
 import { isTwitterURL } from './link.js';
 import { PreferenceView } from './views/preference.js';
 import { PromptView } from './views/prompt.js';
