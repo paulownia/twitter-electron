@@ -1,7 +1,7 @@
 import { clipboard } from 'electron';
 
 import event from './event.js';
-import { isTwitterURL } from './link.js';
+import { isXUrl } from './link.js';
 import { PreferenceView } from './views/preference.js';
 import { PromptView } from './views/prompt.js';
 import { TimelineView } from './views/timeline.js';
@@ -55,7 +55,7 @@ event.on('select-open-url', () => {
       okLabel: 'Open',
       promptType: 'url',
     })
-    .then(url => timelineView.loadRawURL(url))
+    .then(url => timelineView.loadInternalUrl(url))
     .catch(() => {
       // ユーザがキャンセルした場合は何もしない
     });
@@ -87,7 +87,7 @@ function getUserIdFromClipboard(): string {
  */
 function getInternalURLFromClipboard(): string {
   const text = clipboard.readText();
-  if (text && isTwitterURL(text)) {
+  if (text && isXUrl(text)) {
     return text;
   } else {
     return '';

@@ -3,7 +3,7 @@ import contextMenu from 'electron-context-menu';
 import { screen } from 'electron/main';
 import config from '../config.js';
 import log from '../log.js';
-import { isTwitterURL, openWithExternalBrowser } from '../link.js';
+import { isXUrl, openWithExternalBrowser } from '../link.js';
 import { isValidUserId } from '../user-id.js';
 import { equalBounds, defaultBounds } from '../bounds.js';
 import { addSpamFilterToQuery, searchUrlList } from '../search.js';
@@ -41,7 +41,7 @@ export class TimelineView {
       return { action: 'deny' };
     });
     win.webContents.on('will-navigate', (e, url) => {
-      if (!isTwitterURL(url)) {
+      if (!isXUrl(url)) {
         e.preventDefault();
         openWithExternalBrowser(url).catch(log.error);
       }
@@ -151,12 +151,6 @@ export class TimelineView {
     }
   }
 
-  loadRawURL(url: string) {
-    if (isTwitterURL(url)) {
-      this.view!.loadURL(url);
-    }
-  }
-
   loadXPage(url: string) {
     if (!this.view) {
       this.view = this.createWindow();
@@ -177,6 +171,15 @@ export class TimelineView {
 
   loadLogoutPage() {
     this.loadXPage('/logout');
+  }
+
+  loadInternalUrl(url: string) {
+    const parsedUrl = new URL(url);
+    if (!isXUrl(parsedUrl)) {
+      return;
+    }
+    const internalUrl = `${parsedUrl.pathname}${parsedUrl.search}`;
+    this.loadXPage(internalUrl);
   }
 
   goBack() {
