@@ -93,4 +93,3 @@ function getInternalURLFromClipboard(): string {
     return '';
   }
 }
-

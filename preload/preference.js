@@ -11,4 +11,3 @@ contextBridge.exposeInMainWorld('api', {
 
   clearCache: () => ipcRenderer.invoke('clear-cache'),
 });
-

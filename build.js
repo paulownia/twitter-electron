@@ -45,4 +45,3 @@ packager({
 }).catch((err) => {
   console.error(err);
 });
-

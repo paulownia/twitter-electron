@@ -57,12 +57,12 @@ try {
   // ignore
 }
 
-okButton.addEventListener('click', async() => {
+okButton.addEventListener('click', async () => {
   const value = inputField.value;
   await api.promptComplete(value, 'ok');
 });
 
-cancelButton.addEventListener('click', async() => {
+cancelButton.addEventListener('click', async () => {
   await api.promptComplete(null, 'cancel');
 });
 
@@ -82,4 +82,3 @@ inputField.focus();
 
 // Prevent implicit submission
 document.addEventListener('submit', (e) => e.preventDefault());
-
