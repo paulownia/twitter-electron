@@ -227,21 +227,5 @@ export class TimelineView {
     }
     this.view.setBounds(bounds);
   }
-
-  /**
-   * 検索実行
-   * @param keyword 検索キーワード
-   * @param type 検索タイプ
-   */
-  search(keyword: string, type: string) {
-    switch (type) {
-      case 'findTopics':
-        this.loadSearchPage(keyword);
-        break;
-      case 'jumpUserPage':
-        this.loadUserPage(keyword);
-        break;
-    }
-  }
 }
 
