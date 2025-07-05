@@ -33,7 +33,7 @@ export default defineConfig([
       'no-irregular-whitespace': 2,
       'no-spaced-func': 2,
       'no-var': ['error'],
-      'no-constant-condition': ['error', { 'checkLoops': false }],
+      'no-constant-condition': ['error', { checkLoops: false }],
     },
   },
 
@@ -52,7 +52,22 @@ export default defineConfig([
       '@stylistic/space-before-blocks': 2,
       '@stylistic/space-in-parens': 2,
       '@stylistic/keyword-spacing': 2,
-      '@stylistic/object-curly-spacing': ['error', 'always',  { 'objectsInObjects': false }],
+      '@stylistic/object-curly-spacing': ['error', 'always',  { objectsInObjects: false }],
+      '@stylistic/no-trailing-spaces': 2,
+      '@stylistic/arrow-spacing': 2,
+      '@stylistic/brace-style': ['error', '1tbs', { allowSingleLine: true }],
+      '@stylistic/quote-props': ['error', 'consistent-as-needed'],
+      '@stylistic/function-call-spacing': ['error', 'never'],
+      '@stylistic/space-before-function-paren': ['error', {
+        anonymous: 'never',
+        named: 'never',
+        asyncArrow: 'always',
+      }],
+      '@stylistic/no-multiple-empty-lines': ['error', {
+        max: 1,
+        maxEOF: 0,
+        maxBOF: 0,
+      }],
     },
   },
 
@@ -79,9 +94,9 @@ export default defineConfig([
       // no-unused-vars is enabled by eslint.configs.recommended,
       // but it is disabled by tseslint.configs.recommended, so we need to explicitly set it to off.
       '@typescript-eslint/no-unused-vars': ['error', {
-        'argsIgnorePattern': '^_',
-        'varsIgnorePattern': '^_',
-        'caughtErrorsIgnorePattern': '^_',
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
       }],
     },
   },
@@ -98,9 +113,9 @@ export default defineConfig([
     },
     rules: {
       'no-unused-vars': ['error', {
-        'argsIgnorePattern': '^_',
-        'varsIgnorePattern': '^_',
-        'caughtErrorsIgnorePattern': '^_',
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
       }],
     },
   },
