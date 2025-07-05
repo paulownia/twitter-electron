@@ -5,8 +5,8 @@ import config from '../config.js';
 export class PreferenceView {
   private view: BrowserWindow | null = null;
 
-  init() {
-    this.view = new BrowserWindow({
+  createWindow() {
+    const win = new BrowserWindow({
       width: 480,
       height: 640,
       show: true,
@@ -16,28 +16,36 @@ export class PreferenceView {
         preload: path.join(app.getAppPath(), 'preload/preference.js'),
       },
     });
-    this.view.on('closed', () => {
+    win.on('closed', () => {
       this.view = null;
       ipcMain.removeHandler('get-cache-size');
       ipcMain.removeHandler('clear-cache');
     });
 
     ipcMain.handle('get-cache-size', async () => {
-      return await this.view!.webContents.session.getCacheSize();
+      if (!this.view) {
+        return 0; // or throw an error if you prefer
+      }
+      return await this.view.webContents.session.getCacheSize();
     });
 
     ipcMain.handle('clear-cache', async () => {
-      await this.view!.webContents.session.clearCache();
+      if (!this.view) {
+        return; // or throw an error if you prefer
+      }
+      await this.view.webContents.session.clearCache();
     });
+
+    return win;
   }
 
   show() {
     if (!this.view) {
-      this.init();
+      this.view = this.createWindow();
     }
     // this.view.webContents.openDevTools();
-    this.view!.loadFile('ui/preference.html');
-    this.view!.show();
+    this.view.loadFile('ui/preference.html');
+    this.view.show();
   }
 }
 

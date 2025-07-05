@@ -19,35 +19,37 @@ const customCSSRules = `
 
 export class TimelineView {
   private view: BrowserWindow | null = null;
+
   public getView(): BrowserWindow | null {
     return this.view;
   }
 
-  init() {
-    if (this.view) {
-      return;
-    }
-
+  createWindow() {
     const bounds = config.get('windowBounds') ?? defaultBounds;
-    this.view = new BrowserWindow(bounds);
+    const win = new BrowserWindow(bounds);
+    this.setWindowEventHandlers(win);
+    this.initContextMenu(win);
+    return win;
+  }
 
-    this.view.on('close', () => this.saveWindowPosition());
-    this.view.on('close', () => this.view = null);
+  setWindowEventHandlers(win: BrowserWindow) {
+    win.on('close', () => this.saveWindowPosition());
+    win.on('close', () => this.view = null);
 
-    this.view.webContents.setWindowOpenHandler((details) => {
+    win.webContents.setWindowOpenHandler((details) => {
       openWithExternalBrowser(details.url).catch(log.error);
       return { action: 'deny' };
     });
-    this.view.webContents.on('will-navigate', (e, url) => {
+    win.webContents.on('will-navigate', (e, url) => {
       if (!isTwitterURL(url)) {
         e.preventDefault();
         openWithExternalBrowser(url).catch(log.error);
       }
     });
-    this.view.webContents.on('did-finish-load', () => {
-      this.view!.webContents.insertCSS(customCSSRules);
+    win.webContents.on('did-finish-load', () => {
+      this.view?.webContents.insertCSS(customCSSRules);
     });
-    this.view.webContents.on('before-input-event', (e, input) => {
+    win.webContents.on('before-input-event', (e, input) => {
       if (input.meta && input.type === 'keyDown' && input.key === 'ArrowLeft') {
         e.preventDefault();
         this.goBack();
@@ -56,7 +58,7 @@ export class TimelineView {
         this.goForward();
       }
     });
-    this.view.webContents.session.webRequest.onBeforeRequest({ urls: searchUrlList }, (details, callback) => {
+    win.webContents.session.webRequest.onBeforeRequest({ urls: searchUrlList }, (details, callback) => {
       const url = new URL(details.url);
       const newURL = addSpamFilterToQuery(url);
       if (newURL) {
@@ -65,12 +67,11 @@ export class TimelineView {
         callback({ cancel: false });
       }
     });
-    this.initContextMenu();
   }
 
-  initContextMenu() {
+  initContextMenu(win: BrowserWindow) {
     contextMenu({
-      window: this.view ?? undefined,
+      window: win,
       menu: (defaultActions, params, _browserWindow, dictionarySuggestions) => [
         dictionarySuggestions.length > 0 && defaultActions.separator(),
         ...dictionarySuggestions,
@@ -145,8 +146,8 @@ export class TimelineView {
 
   show() {
     if (!this.view) {
-      this.init();
-      this.view!.loadURL(`${baseURL}/`);
+      this.view = this.createWindow();
+      this.view.loadURL(`${baseURL}/`);
     }
   }
 
@@ -158,9 +159,9 @@ export class TimelineView {
 
   loadXPage(url: string) {
     if (!this.view) {
-      this.init();
+      this.view = this.createWindow();
     }
-    this.view!.loadURL(`${baseURL}${url}`);
+    this.view.loadURL(`${baseURL}${url}`);
   }
 
   loadSearchPage(keyword: string) {
