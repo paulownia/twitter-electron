@@ -13,10 +13,10 @@ export async function openWithExternalBrowser(url: string): Promise<void> {
 }
 
 function openByString(urlStr: string): Promise<void> {
-  return openByURL(new URL(urlStr));
+  return openByUrl(new URL(urlStr));
 }
 
-async function openByURL(url: URL) {
+async function openByUrl(url: URL) {
   if (url.protocol !== 'http:' && url.protocol !== 'https:') {
     throw new Error(`Failed to open '${url}', Invalid HTTP URL`);
   }
@@ -34,8 +34,11 @@ async function openByURL(url: URL) {
   }
 }
 
-// Returns true if the given url is a Twitter (X) url
-export function isTwitterURL(url: string | URL): boolean {
+/**
+ * Returns true if the given url is a Twitter (X) url.
+ * Now accepts twitter.com and x.com domains. but in future versions, maybe only x.com will be supported.
+ */
+export function isXUrl(url: string | URL): boolean {
   if (!url) {
     return false;
   } else if (typeof url === 'string') {
