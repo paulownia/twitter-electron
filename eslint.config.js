@@ -30,10 +30,6 @@ export default defineConfig([
     name: 'Custom rules',
     rules: {
       'no-console': 1,
-      'no-irregular-whitespace': 2,
-      'no-spaced-func': 2,
-      'no-var': ['error'],
-      'no-constant-condition': ['error', { checkLoops: false }],
     },
   },
 
@@ -112,6 +108,7 @@ export default defineConfig([
       },
     },
     rules: {
+      'no-var': ['error'],  // this is not enabled in the recommended rule for js files. so it is enabled explicitly here
       'no-unused-vars': ['error', {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
