@@ -49,4 +49,3 @@ export function isXUrl(url: string | URL): boolean {
     return false;
   }
 }
-

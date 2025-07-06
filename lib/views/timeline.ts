@@ -231,4 +231,3 @@ export class TimelineView {
     this.view.setBounds(bounds);
   }
 }
-

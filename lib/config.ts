@@ -5,8 +5,8 @@ import log from './log.js';
 import { Bounds } from './bounds.js';
 
 interface ConfigValue {
-  'externalBrowser': string | undefined;
-  'windowBounds': Bounds | undefined;
+  externalBrowser: string | undefined;
+  windowBounds: Bounds | undefined;
 }
 type ConfigKey = keyof ConfigValue;
 
