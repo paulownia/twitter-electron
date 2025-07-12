@@ -1,8 +1,8 @@
 import eslint from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
+import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
-import { defineConfig } from 'eslint/config';
 
 // You can confirm this eslint configuration using following command:
 // npx eslint --inspect-config

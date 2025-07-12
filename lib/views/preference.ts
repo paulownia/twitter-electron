@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain, app } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 import config from '../config.js';
 

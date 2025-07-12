@@ -1,12 +1,12 @@
 import { BrowserWindow, clipboard } from 'electron';
 import contextMenu from 'electron-context-menu';
 import { screen } from 'electron/main';
+import { defaultBounds, equalBounds } from '../bounds.js';
 import config from '../config.js';
-import log from '../log.js';
 import { isXUrl, openWithExternalBrowser } from '../link.js';
-import { isValidUserId } from '../user-id.js';
-import { equalBounds, defaultBounds } from '../bounds.js';
+import log from '../log.js';
 import { addSpamFilterToQuery, searchUrlList } from '../search.js';
+import { isValidUserId } from '../user-id.js';
 
 const baseURL = 'https://x.com';
 

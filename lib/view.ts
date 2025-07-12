@@ -2,10 +2,10 @@ import { clipboard } from 'electron';
 
 import event from './event.js';
 import { isXUrl } from './link.js';
+import { isValidUserId } from './user-id.js';
 import { PreferenceView } from './views/preference.js';
 import { PromptView } from './views/prompt.js';
 import { TimelineView } from './views/timeline.js';
-import { isValidUserId } from './user-id.js';
 
 const preferenceView = new PreferenceView();
 const promptView = new PromptView();
