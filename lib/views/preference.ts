@@ -3,9 +3,9 @@ import path from 'path';
 import config from '../config.js';
 
 export class PreferenceView {
-  private view: BrowserWindow | null = null;
+  #window: BrowserWindow | null = null;
 
-  createWindow() {
+  #createWindow() {
     const win = new BrowserWindow({
       width: 480,
       height: 640,
@@ -17,35 +17,35 @@ export class PreferenceView {
       },
     });
     win.on('closed', () => {
-      this.view = null;
+      this.#window = null;
       ipcMain.removeHandler('get-cache-size');
       ipcMain.removeHandler('clear-cache');
     });
 
     ipcMain.handle('get-cache-size', async () => {
-      if (!this.view) {
+      if (!this.#window) {
         return 0; // or throw an error if you prefer
       }
-      return await this.view.webContents.session.getCacheSize();
+      return await this.#window.webContents.session.getCacheSize();
     });
 
     ipcMain.handle('clear-cache', async () => {
-      if (!this.view) {
+      if (!this.#window) {
         return; // or throw an error if you prefer
       }
-      await this.view.webContents.session.clearCache();
+      await this.#window.webContents.session.clearCache();
     });
 
     return win;
   }
 
   show() {
-    if (!this.view) {
-      this.view = this.createWindow();
+    if (!this.#window) {
+      this.#window = this.#createWindow();
     }
-    // this.view.webContents.openDevTools();
-    this.view.loadFile('ui/preference.html');
-    this.view.show();
+    // this.#view.webContents.openDevTools();
+    this.#window.loadFile('ui/preference.html');
+    this.#window.show();
   }
 }
 

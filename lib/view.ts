@@ -20,7 +20,7 @@ event.on('select-forward', () => timelineView.goForward());
 event.on('select-back', () => timelineView.goBack());
 event.on('select-find-topics', () => {
   promptView
-    .show(timelineView.getView(), {
+    .show(timelineView.window, {
       title: 'Find Topics',
       placeholder: 'input keyword',
       okLabel: 'Find',
@@ -34,7 +34,7 @@ event.on('select-logout', () => timelineView.loadLogoutPage());
 event.on('select-preferences', () => preferenceView.show());
 event.on('select-go-user-page', () => {
   promptView
-    .show(timelineView.getView(), {
+    .show(timelineView.window, {
       title: 'Go User Page',
       placeholder: 'input user id',
       okLabel: 'Go',
@@ -48,7 +48,7 @@ event.on('select-go-user-page', () => {
 });
 event.on('select-open-url', () => {
   promptView
-    .show(timelineView.getView(), {
+    .show(timelineView.window, {
       title: 'Open URL',
       defaultValue: getInternalURLFromClipboard(),
       placeholder: 'input X URL',

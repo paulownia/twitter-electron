@@ -2,9 +2,9 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
 
 export class PromptView {
-  private view: BrowserWindow | null = null;
+  #window: BrowserWindow | null = null;
 
-  cerateWindow(parent: BrowserWindow | null) {
+  #cerateWindow(parent: BrowserWindow | null) {
     const win = new BrowserWindow({
       parent: parent || undefined,
       width: parent ? parent.getSize()[0] - 16 : 480,
@@ -19,24 +19,24 @@ export class PromptView {
         preload: path.join(app.getAppPath(), 'preload/prompt.js'),
       },
     });
-    win.on('close', () => this.view = null);
+    win.on('close', () => this.#window = null);
     return win;
   }
 
   show(parent: BrowserWindow | null, options: Record<string, string> = {}): Promise<string> {
-    if (!this.view) {
-      this.view = this.cerateWindow(parent);
+    if (!this.#window) {
+      this.#window = this.#cerateWindow(parent);
     }
 
-    this.view.loadFile('ui/prompt.html', {
+    this.#window.loadFile('ui/prompt.html', {
       query: options,
     });
 
-    this.view.once('ready-to-show', () => {
-      if (!this.view) {
+    this.#window.once('ready-to-show', () => {
+      if (!this.#window) {
         return;
       }
-      this.view.show();
+      this.#window.show();
     });
 
     return new Promise((resolve, reject) => {
@@ -53,9 +53,9 @@ export class PromptView {
 
   close() {
     ipcMain.removeHandler('prompt-complete');
-    if (this.view) {
-      this.view.close();
-      this.view = null;
+    if (this.#window) {
+      this.#window.close();
+      this.#window = null;
     }
   }
 }

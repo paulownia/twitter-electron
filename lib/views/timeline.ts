@@ -18,13 +18,13 @@ const customCSSRules = `
 `;
 
 export class TimelineView {
-  private view: BrowserWindow | null = null;
+  #window: BrowserWindow | null = null;
 
-  public getView(): BrowserWindow | null {
-    return this.view;
+  get window(): BrowserWindow | null {
+    return this.#window;
   }
 
-  createWindow() {
+  #createWindow() {
     const bounds = config.get('windowBounds') ?? defaultBounds;
     const win = new BrowserWindow(bounds);
     this.setWindowEventHandlers(win);
@@ -34,7 +34,7 @@ export class TimelineView {
 
   setWindowEventHandlers(win: BrowserWindow) {
     win.on('close', () => this.saveWindowPosition());
-    win.on('close', () => this.view = null);
+    win.on('close', () => this.#window = null);
 
     win.webContents.setWindowOpenHandler((details) => {
       openWithExternalBrowser(details.url).catch(log.error);
@@ -47,7 +47,7 @@ export class TimelineView {
       }
     });
     win.webContents.on('did-finish-load', () => {
-      this.view?.webContents.insertCSS(customCSSRules);
+      this.#window?.webContents.insertCSS(customCSSRules);
     });
     win.webContents.on('before-input-event', (e, input) => {
       if (input.meta && input.type === 'keyDown' && input.key === 'ArrowLeft') {
@@ -145,17 +145,17 @@ export class TimelineView {
   }
 
   show() {
-    if (!this.view) {
-      this.view = this.createWindow();
-      this.view.loadURL(`${baseURL}/`);
+    if (!this.#window) {
+      this.#window = this.#createWindow();
+      this.#window.loadURL(`${baseURL}/`);
     }
   }
 
   loadXPage(url: string) {
-    if (!this.view) {
-      this.view = this.createWindow();
+    if (!this.#window) {
+      this.#window = this.#createWindow();
     }
-    this.view.loadURL(`${baseURL}${url}`);
+    this.#window.loadURL(`${baseURL}${url}`);
   }
 
   loadSearchPage(keyword: string) {
@@ -183,8 +183,8 @@ export class TimelineView {
   }
 
   goBack() {
-    if (!this.view) return;
-    const { navigationHistory } = this.view.webContents;
+    if (!this.#window) return;
+    const { navigationHistory } = this.#window.webContents;
     if (!navigationHistory || !navigationHistory.canGoBack()) {
       return;
     }
@@ -192,8 +192,8 @@ export class TimelineView {
   }
 
   goForward() {
-    if (!this.view) return;
-    const { navigationHistory } = this.view.webContents;
+    if (!this.#window) return;
+    const { navigationHistory } = this.#window.webContents;
     if (!navigationHistory || !navigationHistory.canGoForward()) {
       return;
     }
@@ -201,10 +201,10 @@ export class TimelineView {
   }
 
   saveWindowPosition() {
-    if (!this.view) {
+    if (!this.#window) {
       return;
     }
-    const a = this.view.getBounds();
+    const a = this.#window.getBounds();
     const b = config.get('windowBounds');
     if (!b || !equalBounds(a, b)) {
       config.setAndSave('windowBounds', a);
@@ -212,7 +212,7 @@ export class TimelineView {
   }
 
   resetWindowSize() {
-    if (!this.view) {
+    if (!this.#window) {
       return;
     }
     const desktopSize = screen.getPrimaryDisplay().size;
@@ -228,6 +228,6 @@ export class TimelineView {
     if (desktopSize.width > 1024) {
       bounds.x = desktopSize.width - bounds.width;
     }
-    this.view.setBounds(bounds);
+    this.#window.setBounds(bounds);
   }
 }
