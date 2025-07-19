@@ -1,16 +1,15 @@
 import eslint from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
-import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
 // You can confirm this eslint configuration using following command:
 // npx eslint --inspect-config
 
-export default defineConfig([
+export default tseslint.config(
   // Global ignore patterns (.git and node_modules are ignored by default)
   {
-    name: 'Global ignore patterns',
+    name: 'custom/ignores',
     ignores: [
       'build/',
       'dist/',
@@ -23,11 +22,16 @@ export default defineConfig([
   },
 
   // ESLint recommended rules (apply to all files)
-  eslint.configs.recommended,
+  {
+    name: 'eslint/recommended',
+    ...eslint.configs.recommended,
+  },
+
+  ...tseslint.configs.recommended,
 
   // Custom rules for all files (apply to all files)
   {
-    name: 'Custom rules',
+    name: 'custom/rules',
     rules: {
       'no-console': 1,
     },
@@ -35,7 +39,7 @@ export default defineConfig([
 
   // Stylistic rules (apply to all files)
   {
-    name: 'Stylistic rules',
+    name: 'custom/rules/stylistic',
     plugins: {
       '@stylistic': stylistic,
     },
@@ -69,13 +73,8 @@ export default defineConfig([
 
   // TypeScript rules (apply to .ts files only)
   {
-    name: 'TypeScript rules',
+    name: 'custom/rules/typescript',
     files: ['**/*.ts'],
-    extends: [
-      // defineConfig使用時、この設定はextendsまたはdefineConfigの引数の配列要素として配置できる。
-      // 配列要素にすると、JSにもtypescript向けのルールが適用されてしまうのでここに書く
-      tseslint.configs.recommended,
-    ],
     languageOptions: {
       parserOptions: {
         project: './tsconfig.json',
@@ -99,7 +98,7 @@ export default defineConfig([
 
   // JavaScript rules (apply to .js files only)
   {
-    name: 'JavaScript rules',
+    name: 'custom/rules/javascript',
     files: ['**/*.js'],
     languageOptions: {
       globals: {
@@ -116,4 +115,4 @@ export default defineConfig([
       }],
     },
   },
-]);
+);
