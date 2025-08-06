@@ -11,7 +11,7 @@ import { isValidUserId } from '../user-id.js';
 const baseURL = 'https://x.com';
 
 const customCSSRules = `
-  .r-1tl8opc { font-family:'Tsukushi A Round Gothic', '筑紫A丸ゴシック' !important }
+  .r-1tl8opc { font-family:'Tsukushi A Round Gothic Regular', 'Tsukushi A Round Gothic' !important }
   a[href="/jobs"] { display: none !important }
   a[href="/i/verified-orgs-signup"] { display: none !important }
   a[href="/i/premium_sign_up"] { display: none !important }
