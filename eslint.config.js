@@ -27,7 +27,11 @@ export default tseslint.config(
     ...eslint.configs.recommended,
   },
 
-  ...tseslint.configs.recommended,
+  // TypeScript recommended rules (apply to .ts files only)
+  {
+    files: ['**/*.ts'],
+    extends: [ tseslint.configs.recommended ],
+  },
 
   // Custom rules for all files (apply to all files)
   {
@@ -68,6 +72,10 @@ export default tseslint.config(
         maxEOF: 0,
         maxBOF: 0,
       }],
+      '@stylistic/object-property-newline': ['error', {
+        allowAllPropertiesOnSameLine: true,
+      }],
+      '@stylistic/array-element-newline': ['error', 'consistent'],
     },
   },
 
