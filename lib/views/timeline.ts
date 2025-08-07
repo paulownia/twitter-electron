@@ -11,6 +11,7 @@ import { isValidUserId } from '../user-id.js';
 const baseURL = 'https://x.com';
 
 const customCSSRules = `
+  .css-146c3p1.r-bcqeeo.r-1ttztb7.r-qvutc0.r-1tl8opc.r-a023e6.r-rjixqe.r-b88u0q.r-1awozwy.r-6koalj.r-1udh08x.r-3s2u2q > span > span { font-family:'Tsukushi A Round Gothic Bold', 'Tsukushi A Round Gothic' !important }
   .r-1tl8opc { font-family:'Tsukushi A Round Gothic Regular', 'Tsukushi A Round Gothic' !important }
   a[href="/jobs"] { display: none !important }
   a[href="/i/verified-orgs-signup"] { display: none !important }
