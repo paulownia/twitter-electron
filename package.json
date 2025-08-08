@@ -26,7 +26,8 @@
   "scripts": {
     "start": "tsc && electron .",
     "clean": "rm -rf dist build",
-    "build": "npm run clean && tsc && node build.js",
+    "build": "false 'Error: npm run build:sign or npm run build:no-sign'",
+    "build:sign": "npm run clean && tsc && node build.js",
     "build:no-sign": "npm run clean && tsc && node build.js --no-sign",
     "lint": "eslint .",
     "format": "eslint --fix .",
