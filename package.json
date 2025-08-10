@@ -1,7 +1,7 @@
 {
   "name": "twitter-electron",
   "productName": "Tweetron",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "description": "A WebView-based X client for desktop, built with Electron.",
   "main": "dist/main.js",
   "type": "module",
