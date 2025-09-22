@@ -69,15 +69,18 @@ event.on('select-reset-window-size', () => {
 /**
  * Clipboardの値がユーザIDとして妥当な場合はその値を返す。
  * ユーザIDとして妥当でない場合は空文字列を返す。
- * 先頭が@の場合は@を除去して返す。
+ * 前後に空白や制御文字がある場合は取り除いて返す。
  * @return ユーザIDまたは空文字列
  */
 function getUserIdFromClipboard(): string {
   const text = clipboard.readText();
-  // 最初に@がついている場合は除去する
-  const cleanedText = text.startsWith('@') ? text.slice(1) : text;
 
-  return isValidUserId(cleanedText) ? cleanedText : '';
+  const cleanedText = text.trim();
+
+  const maybeUserId = cleanedText.replace(/^@/, '');
+
+  // 判定は`@`抜きの文字列に対して行うが、返すのは`@`付きで良い
+  return isValidUserId(maybeUserId) ? cleanedText : '';
 }
 
 /**

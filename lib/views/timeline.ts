@@ -173,10 +173,11 @@ export class TimelineView {
   }
 
   loadUserPage(id: string) {
-    if (!isValidUserId(id)) {
+    const cleanedId = id.trim().replace(/^@/, '');
+    if (!isValidUserId(cleanedId)) {
       return;
     }
-    this.loadXPage(`/${id}`);
+    this.loadXPage(`/${cleanedId}`);
   }
 
   loadLogoutPage() {
