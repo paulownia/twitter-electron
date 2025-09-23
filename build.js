@@ -16,6 +16,7 @@ if (args.length > 0 && (!noSign || args.length > 1)) {
 packager({
   out: 'build',
   dir: '.',
+  icon: './icon/AppIcon.icns',
   overwrite: true,
   executableName: 'Tweetron',
   appBundleId: process.env.APP_BUNDLE_ID,
