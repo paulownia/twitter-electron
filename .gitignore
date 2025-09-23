@@ -6,3 +6,13 @@ build/
 
 .DS_Store
 
+# material image files should be ignored
+icon/*.pxd
+icon/*.psd
+icon/*.ai
+icon/*.svg
+icon/*.png
+# icon composer files
+icon/*.icon
+# build artifacts
+icon/*.icns
