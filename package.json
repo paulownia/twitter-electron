@@ -25,12 +25,13 @@
   },
   "scripts": {
     "start": "tsc && electron .",
-    "clean": "rm -rf dist build",
+    "clean": "rm -rf dist build && rm icon/AppIcon.icns",
     "build": "false 'Error: npm run build:sign or npm run build:no-sign'",
-    "build:sign": "npm run clean && tsc && node build.js",
-    "build:no-sign": "npm run clean && tsc && node build.js --no-sign",
+    "build:sign": "npm run clean && npm run build-icon && tsc && node build.js",
+    "build:no-sign": "npm run clean && npm run build-icon && tsc && node build.js --no-sign",
     "lint": "eslint .",
     "format": "eslint --fix .",
+    "build-icon": "iconutil -c icns icon/AppIcon.iconset -o icon/AppIcon.icns",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
