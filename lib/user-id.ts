@@ -31,8 +31,8 @@ export function isValidUserId(maybeUserId: string) {
   if (!maybeUserId.match(/^[\w_]+$/)) {
     return false; // 英数字とアンダースコア以外の文字が含まれている
   }
-  if (unavailableUserIds.has(maybeUserId)) {
-    return false; // 特定の予約語が含まれている
+  if (unavailableUserIds.has(maybeUserId.toLowerCase())) {
+    return false; // 特定の予約語が含まれている（大文字小文字を区別しない）
   }
   return true;
 }
