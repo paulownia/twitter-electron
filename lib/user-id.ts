@@ -28,7 +28,7 @@ export function isValidUserId(maybeUserId: string) {
   if (maybeUserId.length < 3) {
     return false; // 3文字以下のidは存在しない（はず）
   }
-  if (!maybeUserId.match(/^[\w_]+$/)) {
+  if (!maybeUserId.match(/^[a-zA-Z0-9_]+$/)) {
     return false; // 英数字とアンダースコア以外の文字が含まれている
   }
   if (unavailableUserIds.has(maybeUserId.toLowerCase())) {
