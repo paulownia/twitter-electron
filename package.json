@@ -6,8 +6,10 @@
   "main": "dist/main.js",
   "type": "module",
   "dependencies": {
+    "@power-assert/node": "^0.6.0",
     "electron-context-menu": "^4.1.0",
-    "open": "^10.1.2"
+    "open": "^10.1.2",
+    "tsx": "^4.20.6"
   },
   "devDependencies": {
     "@electron/packager": "^18.3.6",
@@ -32,7 +34,7 @@
     "lint": "eslint .",
     "format": "eslint --fix .",
     "build-icon": "iconutil -c icns icon/AppIcon.iconset -o icon/AppIcon.icns",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tsx --test --enable-source-maps --import @power-assert/node test/**/*.test.ts"
   },
   "author": "",
   "license": "ISC",

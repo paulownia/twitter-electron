@@ -18,5 +18,6 @@
     "main.ts",
     "lib/**/*.ts",
     "preload/**/*.ts",
+    "test/**/*.ts"
   ]
 }

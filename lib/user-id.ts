@@ -28,11 +28,11 @@ export function isValidUserId(maybeUserId: string) {
   if (maybeUserId.length < 3) {
     return false; // 3文字以下のidは存在しない（はず）
   }
-  if (!maybeUserId.match(/^[\w_]+$/)) {
+  if (!maybeUserId.match(/^[a-zA-Z0-9_]+$/)) {
     return false; // 英数字とアンダースコア以外の文字が含まれている
   }
-  if (unavailableUserIds.has(maybeUserId)) {
-    return false; // 特定の予約語が含まれている
+  if (unavailableUserIds.has(maybeUserId.toLowerCase())) {
+    return false; // 特定の予約語が含まれている（大文字小文字を区別しない）
   }
   return true;
 }
