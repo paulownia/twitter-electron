@@ -1,7 +1,29 @@
-import { app } from 'electron';
+interface Logger {
+  error: (message: unknown) => void;
+  warn: (message: string) => void;
+  info: (message: string) => void;
+}
 
-const log = {
-  error: (message: unknown) => {
+const log: Logger = {
+  error: (_message: unknown) => {},
+  warn: (_message: string) => {},
+  info: (_message: string) => {},
+};
+
+function print(message: string, level: string) {
+  process.stderr.write(`${level}\t${timestamp()}\t${message}\n`);
+}
+
+export function getLogger(): Logger {
+  return log;
+}
+
+export function initLogger(app: { isPackaged: boolean }): void {
+  if (Object.isFrozen(log)) {
+    log.warn('Logger already initialized');
+    return;
+  }
+  log.error = (message: unknown) => {
     if (message instanceof Error) {
       print(`${message.name}: ${message.message}\n${message.stack}`, 'E');
     } else if (typeof message === 'string') {
@@ -9,23 +31,14 @@ const log = {
     } else {
       print(`Unknown error: ${String(message)}`, 'E');
     }
-  },
-  warn: (message: string) => print(message, 'W'),
-  info: getPrinter('I'),
-} as const;
-
-function getPrinter(level: string): (message: string) => void {
-  if (app.isPackaged) {
-    return () => {
-      // In packaged mode, do nothing for info logs
-    };
-  } else {
-    return (message: string) => print(message, level);
+  };
+  log.warn = (message: string) => print(message, 'W');
+  // packagedでない（＝開発中）場合のみ info ログを出す
+  if (!app.isPackaged) {
+    log.info = (message: string) => print(message, 'I');
   }
-}
-
-function print(message: string, level: string) {
-  process.stderr.write(`${level}\t${timestamp()}\t${message}\n`);
+  // 以後 log オブジェクトのプロパティは変更不可にする
+  Object.freeze(log);
 }
 
 // Returns the current time in YYYY-MM-DD HH:MM:SS format
@@ -46,5 +59,3 @@ function timestamp(): string {
   const sec = pad(now.getSeconds());
   return `${y}-${m}-${d}T${h}:${min}:${sec}${tzSign}${tzHour}:${tzMin}`;
 }
-
-export default log;

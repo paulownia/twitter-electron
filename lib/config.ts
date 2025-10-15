@@ -2,7 +2,9 @@ import { app } from 'electron';
 import fs from 'fs/promises';
 import path from 'path';
 import { Bounds } from './bounds.js';
-import log from './log.js';
+import { getLogger } from './log.js';
+
+const log = getLogger();
 
 interface ConfigValue {
   externalBrowser: string | undefined;

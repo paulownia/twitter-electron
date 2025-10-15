@@ -4,9 +4,11 @@ import { screen } from 'electron/main';
 import { defaultBounds, equalBounds } from '../bounds.js';
 import config from '../config.js';
 import { isXUrl, openWithExternalBrowser } from '../link.js';
-import log from '../log.js';
+import { getLogger } from '../log.js';
 import { addSpamFilterToQuery, searchUrlList } from '../search.js';
 import { isValidUserId } from '../user-id.js';
+
+const log = getLogger();
 
 const baseURL = 'https://x.com';
 
