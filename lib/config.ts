@@ -2,12 +2,13 @@ import { app } from 'electron';
 import fs from 'fs/promises';
 import path from 'path';
 import { Bounds } from './bounds.js';
+import { Browser } from './browser.js';
 import { getLogger } from './log.js';
 
 const log = getLogger();
 
 interface ConfigValue {
-  externalBrowser: string | undefined;
+  externalBrowser: Browser | undefined;
   windowBounds: Bounds | undefined;
 }
 type ConfigKey = keyof ConfigValue;

@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
+import { isValidBrowser } from '../browser.js';
 import config from '../config.js';
 
 export class PreferenceView {
@@ -50,7 +51,7 @@ export class PreferenceView {
 }
 
 ipcMain.handle('set-preference', (_event, key: string, value: unknown) => {
-  if (key !== 'externalBrowser' || typeof value !== 'string') {
+  if (key !== 'externalBrowser' || typeof value !== 'string' || isValidBrowser(value) === false) {
     throw new Error(`Unsupported key for config setter: ${key}`);
   }
   config.setAndSave('externalBrowser', value);
