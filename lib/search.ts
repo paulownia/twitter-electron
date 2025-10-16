@@ -1,4 +1,6 @@
-import log from './log.js';
+import { getLogger } from './log.js';
+
+const log = getLogger();
 
 /**
  * Twitter (X) の検索URLのパターン
