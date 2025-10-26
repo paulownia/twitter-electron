@@ -1,7 +1,7 @@
 import { clipboard } from 'electron';
 
 import event from './event.js';
-import { isXUrl } from './link.js';
+import { isXUrl } from './x-url.js';
 import { isValidUserId } from './user-id.js';
 import { PreferenceView } from './views/preference.js';
 import { PromptView } from './views/prompt.js';

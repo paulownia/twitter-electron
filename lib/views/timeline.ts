@@ -3,9 +3,10 @@ import contextMenu from 'electron-context-menu';
 import { screen } from 'electron/main';
 import { defaultBounds, equalBounds } from '../bounds.js';
 import config from '../config.js';
-import { isXUrl, openWithExternalBrowser } from '../link.js';
+import { openWithExternalBrowser } from '../link.js';
 import { getLogger } from '../log.js';
 import { addSpamFilterToQuery, searchUrlList } from '../search.js';
+import { isXUrl } from '../x-url.js';
 import { isValidUserId } from '../user-id.js';
 
 const log = getLogger();
