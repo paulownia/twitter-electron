@@ -1,3 +1,5 @@
+import { isXUrl } from './x-url.js';
+
 const unavailableUserIds = new Set([
   'login',
   'logout',
@@ -35,4 +37,48 @@ export function isValidUserId(maybeUserId: string) {
     return false; // 特定の予約語が含まれている（大文字小文字を区別しない）
   }
   return true;
+}
+
+export function isUserPageUrl(urlStrOrPathname: string): boolean {
+  // urlの形式が https:// スタートの場合はXのURLかどうかをチェックし、パス名を取得する
+  // /から始まっている場合はx.comのユーザーページの可能性があるのでそのままパス名として扱う
+  const pathname = urlStringToPathname(urlStrOrPathname);
+  if (pathname === null) {
+    return false;
+  }
+
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.length === 1) {
+    return isValidUserId(segments[0]);
+  }
+  return false;
+}
+
+/**
+ * この関数は, isUserPageUrl(url) が true を返すURLからユーザIDを抽出します。isUserPageUrl(url) で検査済みであることが前提です。
+ * @param url
+ * @returns
+ */
+export function extractUserIdFromUrl(urlStrOrPathname: string): string  {
+// isUserPageUrl(url) で検査済みで前提あること
+  const path = urlStringToPathname(urlStrOrPathname);
+  if (path === null) {
+    throw new Error(`Invalid URL or pathname: ${urlStrOrPathname}`);
+  }
+  const segments = path.split('/').filter(Boolean);
+  const maybeUserId = segments.length >= 1 ? segments[0] : null;
+  if (maybeUserId === null || !isValidUserId(maybeUserId)) {
+    throw new Error(`Invalid user ID extracted from URL: ${segments[0]}`);
+  }
+  return maybeUserId;
+}
+
+function urlStringToPathname(url: string): string | null {
+  if (isXUrl(url)) {
+    return new URL(url).pathname;
+  } else if (url.startsWith('/')) {
+    return url;
+  } else {
+    return null;
+  }
 }
