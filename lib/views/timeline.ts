@@ -6,8 +6,8 @@ import config from '../config.js';
 import { openWithExternalBrowser } from '../link.js';
 import { getLogger } from '../log.js';
 import { addSpamFilterToQuery, searchUrlList } from '../search.js';
+import { extractUserIdFromUrl, isUserPageUrl, isValidUserId } from '../user-id.js';
 import { isXUrl } from '../x-url.js';
-import { isValidUserId } from '../user-id.js';
 
 const log = getLogger();
 
@@ -146,6 +146,14 @@ export class TimelineView {
         // options.showSaveVideoAs && defaultActions.saveVideoAs(),
         //options.showCopyVideoAddress && defaultActions.copyVideoAddress(),
         defaultActions.separator(),
+        {
+          label: 'Copy user ID',
+          visible: params.linkURL && isUserPageUrl(params.linkURL),
+          click: () => {
+            const userId = `@${extractUserIdFromUrl(params.linkURL)}`;
+            clipboard.writeText(userId);
+          },
+        },
         defaultActions.copyLink({}),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (defaultActions as any).saveLinkAs(), // .d.tsに設定が漏れているようだ。型エラー回避のため any を使う
