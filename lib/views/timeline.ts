@@ -6,7 +6,7 @@ import config from '../config.js';
 import { openWithExternalBrowser } from '../link.js';
 import { getLogger } from '../log.js';
 import { addSpamFilterToQuery, searchUrlList } from '../search.js';
-import { extractUserIdFromUrl, isUserPageUrl, isValidUserId } from '../user-id.js';
+import { extractUserIdFromUrl, isStatusPageUrl, isUserPageUrl, isValidUserId } from '../user-id.js';
 import { isXUrl } from '../x-url.js';
 
 const log = getLogger();
@@ -157,6 +157,18 @@ export class TimelineView {
         defaultActions.copyLink({}),
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (defaultActions as any).saveLinkAs(), // .d.tsに設定が漏れているようだ。型エラー回避のため any を使う
+        {
+          label: 'Copy user ID',
+          // ページのURLがユーザーページ、かつリンクをクリックしていない場合に有効にする
+          visible: !params.linkURL && (
+            isUserPageUrl(win.webContents.getURL()) ||
+            isStatusPageUrl(win.webContents.getURL())
+          ),
+          click: () => {
+            const userId = `@${extractUserIdFromUrl(win.webContents.getURL())}`;
+            clipboard.writeText(userId);
+          },
+        },
         defaultActions.separator(),
         defaultActions.inspect(),
         defaultActions.services(),
