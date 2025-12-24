@@ -54,6 +54,21 @@ export function isUserPageUrl(urlStrOrPathname: string): boolean {
   return false;
 }
 
+export function isStatusPageUrl(urlStrOrPathname: string): boolean {
+  // urlの形式が https:// スタートの場合はXのURLかどうかをチェックし、パス名を取得する
+  // /から始まっている場合はx.comのユーザーページの可能性があるのでそのままパス名として扱う
+  const pathname = urlStringToPathname(urlStrOrPathname);
+  if (pathname === null) {
+    return false;
+  }
+
+  const segments = pathname.split('/').filter(Boolean);
+  if (segments.length > 1 && segments[1] === 'status') {
+    return isValidUserId(segments[0]);
+  }
+  return false;
+}
+
 /**
  * この関数は, isUserPageUrl(url) が true を返すURLからユーザIDを抽出します。isUserPageUrl(url) で検査済みであることが前提です。
  * @param url
