@@ -86,16 +86,14 @@ export class TimelineView {
     contextMenu({
       window: win,
       menu: (defaultActions, params, _browserWindow, dictionarySuggestions) => [
-        dictionarySuggestions.length > 0 && defaultActions.separator(),
         ...dictionarySuggestions,
         defaultActions.separator(),
         defaultActions.learnSpelling({}),
         defaultActions.separator(),
         defaultActions.lookUpSelection({}),
-        defaultActions.separator(),
         {
           label: 'Search in X',
-          visible: params.selectionText && params.selectionText.length > 0 && params.selectionText.length < 128,
+          visible: params.selectionText.length > 0 && params.selectionText.length < 128,
           click: () => {
             const word = encodeURIComponent(params.selectionText);
             const url = `/search?q=${word}&f=live`;
@@ -107,8 +105,9 @@ export class TimelineView {
         defaultActions.cut({}),
         defaultActions.copy({}),
         defaultActions.paste({}),
-        // shouldShowSelectAll && defaultActions.selectAll(),
         defaultActions.separator(),
+
+        // 画像に対するカスタムメニュー
         {
           label: 'Copy image ID',
           visible: params.mediaType === 'image',
@@ -138,6 +137,9 @@ export class TimelineView {
             openWithExternalBrowser(url).catch(log.error);
           },
         },
+        defaultActions.separator(),
+        // 画像に対するカスタムメニューここまで
+
         // options.showSaveImage && defaultActions.saveImage(),
         // options.showSaveImageAs && defaultActions.saveImageAs(),
         // options.showCopyImage !== false && defaultActions.copyImage(),
@@ -145,18 +147,8 @@ export class TimelineView {
         // options.showSaveVideo && defaultActions.saveVideo(),
         // options.showSaveVideoAs && defaultActions.saveVideoAs(),
         //options.showCopyVideoAddress && defaultActions.copyVideoAddress(),
-        defaultActions.separator(),
-        {
-          label: 'Copy user ID',
-          visible: params.linkURL && isUserPageUrl(params.linkURL),
-          click: () => {
-            const userId = `@${extractUserIdFromUrl(params.linkURL)}`;
-            clipboard.writeText(userId);
-          },
-        },
-        defaultActions.copyLink({}),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (defaultActions as any).saveLinkAs(), // .d.tsに設定が漏れているようだ。型エラー回避のため any を使う
+
+        // ユーザーページやステータスページに対するカスタムメニュー
         {
           label: 'Copy user ID',
           // ページのURLがユーザーページ、かつリンクをクリックしていない場合に有効にする
@@ -169,7 +161,21 @@ export class TimelineView {
             clipboard.writeText(userId);
           },
         },
+        {
+          label: 'Open user page in external browser',
+          visible: !params.linkURL && (
+            isUserPageUrl(win.webContents.getURL()) ||
+            isStatusPageUrl(win.webContents.getURL())
+          ),
+          click: () => {
+            const userId = extractUserIdFromUrl(win.webContents.getURL());
+            const url = `https://x.com/${userId}`;
+            openWithExternalBrowser(url).catch(log.error);
+          },
+        },
         defaultActions.separator(),
+        // ユーザーページやステータスページに対するカスタムメニューここまで
+
         defaultActions.inspect(),
         defaultActions.services(),
         defaultActions.separator(),
