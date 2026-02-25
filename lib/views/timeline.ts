@@ -85,95 +85,108 @@ export class TimelineView {
   initContextMenu(win: BrowserWindow) {
     contextMenu({
       window: win,
-      menu: (defaultActions, params, _browserWindow, dictionarySuggestions) => [
-        dictionarySuggestions.length > 0 && defaultActions.separator(),
-        ...dictionarySuggestions,
-        defaultActions.separator(),
-        defaultActions.learnSpelling({}),
-        defaultActions.separator(),
-        defaultActions.lookUpSelection({}),
-        defaultActions.separator(),
-        {
-          label: 'Search in X',
-          visible: params.selectionText && params.selectionText.length > 0 && params.selectionText.length < 128,
-          click: () => {
-            const word = encodeURIComponent(params.selectionText);
-            const url = `/search?q=${word}&f=live`;
-            this.loadXPage(url);
+      menu: (defaultActions, params, _browserWindow, dictionarySuggestions) => {
+        const pageUrl = win.webContents.getURL();
+        const isUserPage = isUserPageUrl(pageUrl);
+        const isStatusPage = isStatusPageUrl(pageUrl);
+        const userId = (isUserPage || isStatusPage) ? extractUserIdFromUrl(pageUrl) : null;
+
+        return [
+          ...dictionarySuggestions,
+          defaultActions.separator(),
+          defaultActions.learnSpelling({}),
+          defaultActions.separator(),
+          defaultActions.lookUpSelection({}),
+          {
+            label: 'Search in X',
+            visible: params.selectionText.length > 0 && params.selectionText.length < 128,
+            click: () => {
+              const word = encodeURIComponent(params.selectionText);
+              const url = `/search?q=${word}&f=live`;
+              this.loadXPage(url);
+            },
           },
-        },
-        defaultActions.searchWithGoogle({}),
-        defaultActions.separator(),
-        defaultActions.cut({}),
-        defaultActions.copy({}),
-        defaultActions.paste({}),
-        // shouldShowSelectAll && defaultActions.selectAll(),
-        defaultActions.separator(),
-        {
-          label: 'Copy image ID',
-          visible: params.mediaType === 'image',
-          click: () => {
-            // URLの例 https://pbs.twimg.com/media/mediaID?format=jpg&name=orig
-            // mediaIdはpath最後のスラッシュ以降の部分
-            const mediaID = new URL(params.srcURL).pathname.split('/').at(-1);
-            if (mediaID) {
-              clipboard.writeText(mediaID);
-            } else {
-              log.warn(`Failed to extract media ID from URL: ${params.srcURL}`);
-            }
+          defaultActions.searchWithGoogle({}),
+          defaultActions.separator(),
+          defaultActions.cut({}),
+          defaultActions.copy({}),
+          defaultActions.paste({}),
+          defaultActions.separator(),
+
+          // 画像に対するカスタムメニュー
+          {
+            label: 'Copy image ID',
+            visible: params.mediaType === 'image',
+            click: () => {
+              // URLの例 https://pbs.twimg.com/media/mediaID?format=jpg&name=orig
+              // mediaIdはpath最後のスラッシュ以降の部分
+              const mediaID = new URL(params.srcURL).pathname.split('/').at(-1);
+              if (mediaID) {
+                clipboard.writeText(mediaID);
+              } else {
+                log.warn(`Failed to extract media ID from URL: ${params.srcURL}`);
+              }
+            },
           },
-        },
-        {
-          label: 'Open image in external browser',
-          visible: params.mediaType === 'image',
-          click: () => {
-            openWithExternalBrowser(params.srcURL).catch(log.error);
+          {
+            label: 'Open image in external browser',
+            visible: params.mediaType === 'image',
+            click: () => {
+              openWithExternalBrowser(params.srcURL).catch(log.error);
+            },
           },
-        },
-        {
-          label: 'Open original in external browser',
-          visible: params.mediaType === 'image',
-          click: () => {
-            const url = params.srcURL.replace(/&name=[a-z0-9]+$/, '&name=orig');
-            openWithExternalBrowser(url).catch(log.error);
+          {
+            label: 'Open original in external browser',
+            visible: params.mediaType === 'image',
+            click: () => {
+              const url = params.srcURL.replace(/&name=[a-z0-9]+$/, '&name=orig');
+              openWithExternalBrowser(url).catch(log.error);
+            },
           },
-        },
-        // options.showSaveImage && defaultActions.saveImage(),
-        // options.showSaveImageAs && defaultActions.saveImageAs(),
-        // options.showCopyImage !== false && defaultActions.copyImage(),
-        // options.showCopyImageAddress && defaultActions.copyImageAddress(),
-        // options.showSaveVideo && defaultActions.saveVideo(),
-        // options.showSaveVideoAs && defaultActions.saveVideoAs(),
-        //options.showCopyVideoAddress && defaultActions.copyVideoAddress(),
-        defaultActions.separator(),
-        {
-          label: 'Copy user ID',
-          visible: params.linkURL && isUserPageUrl(params.linkURL),
-          click: () => {
-            const userId = `@${extractUserIdFromUrl(params.linkURL)}`;
-            clipboard.writeText(userId);
+          defaultActions.separator(),
+          // 画像に対するカスタムメニューここまで
+
+          // options.showSaveImage && defaultActions.saveImage(),
+          // options.showSaveImageAs && defaultActions.saveImageAs(),
+          // options.showCopyImage !== false && defaultActions.copyImage(),
+          // options.showCopyImageAddress && defaultActions.copyImageAddress(),
+          // options.showSaveVideo && defaultActions.saveVideo(),
+          // options.showSaveVideoAs && defaultActions.saveVideoAs(),
+          //options.showCopyVideoAddress && defaultActions.copyVideoAddress(),
+
+          // ユーザーページやステータスページに対するカスタムメニュー
+          {
+            label: 'Copy user ID',
+            // ページのURLがユーザーページ、かつリンクをクリックしていない場合に有効にする
+            visible: !params.linkURL && (isUserPage || isStatusPage),
+            click: () => {
+              if (userId) {
+                clipboard.writeText(`@${userId}`);
+              } else {
+                log.warn(`User ID is null for URL: ${pageUrl}`);
+              }
+            },
           },
-        },
-        defaultActions.copyLink({}),
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (defaultActions as any).saveLinkAs(), // .d.tsに設定が漏れているようだ。型エラー回避のため any を使う
-        {
-          label: 'Copy user ID',
-          // ページのURLがユーザーページ、かつリンクをクリックしていない場合に有効にする
-          visible: !params.linkURL && (
-            isUserPageUrl(win.webContents.getURL()) ||
-            isStatusPageUrl(win.webContents.getURL())
-          ),
-          click: () => {
-            const userId = `@${extractUserIdFromUrl(win.webContents.getURL())}`;
-            clipboard.writeText(userId);
+          {
+            label: 'Open user page in external browser',
+            visible: !params.linkURL && (isUserPage || isStatusPage),
+            click: () => {
+              if (userId) {
+                const url = `https://x.com/${userId}`;
+                openWithExternalBrowser(url).catch(log.error);
+              } else {
+                log.warn(`User ID is null for URL: ${pageUrl}`);
+              }
+            },
           },
-        },
-        defaultActions.separator(),
-        defaultActions.inspect(),
-        defaultActions.services(),
-        defaultActions.separator(),
-      ],
+          defaultActions.separator(),
+          // ユーザーページやステータスページに対するカスタムメニューここまで
+
+          defaultActions.inspect(),
+          defaultActions.services(),
+          defaultActions.separator(),
+        ];
+      },
     });
   }
 
