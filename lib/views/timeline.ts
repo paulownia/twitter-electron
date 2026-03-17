@@ -25,9 +25,9 @@ const customCSSRules = `
     font-weight: normal;
   }
   .r-1tl8opc { font-family: 'TsukushiARoundGothic' !important }
-  a[href="/jobs"] { display: none !important }
-  a[href="/i/verified-orgs-signup"] { display: none !important }
+  // a[href="/i/verified-orgs-signup"] { display: none !important }
   a[href="/i/premium_sign_up"] { display: none !important }
+  a[href="/i/jf/creators/studio"] { display: none !important }
 `;
 
 export class TimelineView {
@@ -113,6 +113,34 @@ export class TimelineView {
           defaultActions.paste({}),
           defaultActions.separator(),
 
+          // ユーザーページやステータスページに対するカスタムメニュー
+          {
+            label: 'Copy user ID',
+            // ページのURLがユーザーページ、かつリンクをクリックしていない場合に有効にする
+            visible: !params.linkURL && (isUserPage || isStatusPage),
+            click: () => {
+              if (userId) {
+                clipboard.writeText(`@${userId}`);
+              } else {
+                log.warn(`User ID is null for URL: ${pageUrl}`);
+              }
+            },
+          },
+          {
+            label: 'Open user page in external browser',
+            visible: !params.linkURL && (isUserPage || isStatusPage),
+            click: () => {
+              if (userId) {
+                const url = `https://x.com/${userId}`;
+                openWithExternalBrowser(url).catch(log.error);
+              } else {
+                log.warn(`User ID is null for URL: ${pageUrl}`);
+              }
+            },
+          },
+          defaultActions.separator(),
+          // ユーザーページやステータスページに対するカスタムメニューここまで
+
           // 画像に対するカスタムメニュー
           {
             label: 'Copy image ID',
@@ -153,34 +181,6 @@ export class TimelineView {
           // options.showSaveVideo && defaultActions.saveVideo(),
           // options.showSaveVideoAs && defaultActions.saveVideoAs(),
           //options.showCopyVideoAddress && defaultActions.copyVideoAddress(),
-
-          // ユーザーページやステータスページに対するカスタムメニュー
-          {
-            label: 'Copy user ID',
-            // ページのURLがユーザーページ、かつリンクをクリックしていない場合に有効にする
-            visible: !params.linkURL && (isUserPage || isStatusPage),
-            click: () => {
-              if (userId) {
-                clipboard.writeText(`@${userId}`);
-              } else {
-                log.warn(`User ID is null for URL: ${pageUrl}`);
-              }
-            },
-          },
-          {
-            label: 'Open user page in external browser',
-            visible: !params.linkURL && (isUserPage || isStatusPage),
-            click: () => {
-              if (userId) {
-                const url = `https://x.com/${userId}`;
-                openWithExternalBrowser(url).catch(log.error);
-              } else {
-                log.warn(`User ID is null for URL: ${pageUrl}`);
-              }
-            },
-          },
-          defaultActions.separator(),
-          // ユーザーページやステータスページに対するカスタムメニューここまで
 
           defaultActions.inspect(),
           defaultActions.services(),
