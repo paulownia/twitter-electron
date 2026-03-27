@@ -1,6 +1,6 @@
 import assert from 'node:assert';
 import { describe, it } from 'node:test';
-import { isValidUserId } from '../../lib/user-id.js';
+import { isUserContentPage, isValidUserId } from '../../lib/user-id.js';
 
 describe('user-id.ts', () => {
   describe('isValidUserId', () => {
@@ -170,6 +170,95 @@ describe('user-id.ts', () => {
         assert.strictEqual(isValidUserId('home123'), true);
         assert.strictEqual(isValidUserId('login_user'), true);
         assert.strictEqual(isValidUserId('user_settings'), true);
+      });
+    });
+  });
+
+  describe('isUserContentPage', () => {
+    describe('ユーザページ (/{user_id})', () => {
+      it('パス名のみで true を返す', () => {
+        assert.strictEqual(isUserContentPage('/user123'), true);
+      });
+
+      it('完全なURLで true を返す', () => {
+        assert.strictEqual(isUserContentPage('https://x.com/user123'), true);
+      });
+
+      it('アンダースコア付きユーザIDで true を返す', () => {
+        assert.strictEqual(isUserContentPage('/user_name'), true);
+      });
+    });
+
+    describe('ユーザタブページ (/{user_id}/{tab})', () => {
+      it('with_replies タブで true を返す', () => {
+        assert.strictEqual(isUserContentPage('/user123/with_replies'), true);
+      });
+
+      it('highlights タブで true を返す', () => {
+        assert.strictEqual(isUserContentPage('/user123/highlights'), true);
+      });
+
+      it('media タブで true を返す', () => {
+        assert.strictEqual(isUserContentPage('/user123/media'), true);
+      });
+
+      it('完全なURLのタブページで true を返す', () => {
+        assert.strictEqual(isUserContentPage('https://x.com/user123/media'), true);
+      });
+
+      it('未知のタブで false を返す', () => {
+        assert.strictEqual(isUserContentPage('/user123/unknown_tab'), false);
+      });
+    });
+
+    describe('ステータスページ (/{user_id}/status/{status_id})', () => {
+      it('ステータスページで true を返す', () => {
+        assert.strictEqual(isUserContentPage('/user123/status/123456789'), true);
+      });
+
+      it('完全なURLのステータスページで true を返す', () => {
+        assert.strictEqual(isUserContentPage('https://x.com/user123/status/123456789'), true);
+      });
+    });
+
+    describe('写真ページ (/{user_id}/status/{status_id}/photo/{num})', () => {
+      it('写真ページで true を返す', () => {
+        assert.strictEqual(isUserContentPage('/user123/status/123456789/photo/1'), true);
+      });
+
+      it('完全なURLの写真ページで true を返す', () => {
+        assert.strictEqual(isUserContentPage('https://x.com/user123/status/123456789/photo/2'), true);
+      });
+    });
+
+    describe('false を返すケース', () => {
+      it('ルートパスで false を返す', () => {
+        assert.strictEqual(isUserContentPage('/'), false);
+      });
+
+      it('空文字で false を返す', () => {
+        assert.strictEqual(isUserContentPage(''), false);
+      });
+
+      it('予約語パスで false を返す', () => {
+        assert.strictEqual(isUserContentPage('/home'), false);
+        assert.strictEqual(isUserContentPage('/search'), false);
+        assert.strictEqual(isUserContentPage('/notifications'), false);
+        assert.strictEqual(isUserContentPage('/messages'), false);
+        assert.strictEqual(isUserContentPage('/settings'), false);
+        assert.strictEqual(isUserContentPage('/explore'), false);
+      });
+
+      it('X以外のURLで false を返す', () => {
+        assert.strictEqual(isUserContentPage('https://example.com/user123'), false);
+      });
+
+      it('セグメントが4つのパスで false を返す', () => {
+        assert.strictEqual(isUserContentPage('/user123/status/123/extra'), false);
+      });
+
+      it('セグメントが6つ以上のパスで false を返す', () => {
+        assert.strictEqual(isUserContentPage('/user123/status/123/photo/1/extra'), false);
       });
     });
   });

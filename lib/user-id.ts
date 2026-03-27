@@ -20,6 +20,51 @@ const unavailableUserIds = new Set([
 ]);
 
 /**
+ * ユーザページのパス判定用キーワード一覧
+ * `/${user_id}/${content}` のcontentに当てはまるもの
+ */
+const userTabPaths = [
+  'with_replies', // ユーザページのリプライ
+  'highlights',   // ユーザページのハイライト
+  'media'         // ユーザページのメディア
+]
+
+/**
+ * ユーザ個別のページかどうか判定。以下のいずれかにマッチするかどうか？
+ *  - `/${user-id}`
+ *  - `/${user-id}/statuses/${status-id}`
+ *  - `/${user-id}/statuses/${status-id}/photo/${num}`
+ *  - `/${user-id}/${tab-path}`
+ */
+export function isUserContentPage(urlStrOrPathname: string): boolean {
+  const pathname = urlStringToPathname(urlStrOrPathname);
+  if (pathname === null) {
+    return false;
+  }
+  const segments = pathname.split('/').filter(Boolean);  // 先頭要素は空文字なので除去
+  if (segments.length === 0) {
+    return false;
+  }
+  if (!isValidUserId(segments[0])) {
+    return false;
+  }
+
+  switch (segments.length) {
+    case 1:
+      return true;
+    case 2:
+      return userTabPaths.includes(segments[1]);
+    case 3:
+    case 5:
+      return segments[1] === 'status';
+
+    default:
+      return false;
+
+  }
+}
+
+/**
  * ユーザIDとして妥当かどうかを判定する。
  * 妥当なユーザIDとは、英数字とアンダースコア(_)のみで構成され、3文字以上で、特定の予約語でないもの。
  *
@@ -39,43 +84,10 @@ export function isValidUserId(maybeUserId: string) {
   return true;
 }
 
-export function isUserPageUrl(urlStrOrPathname: string): boolean {
-  // urlの形式が https:// スタートの場合はXのURLかどうかをチェックし、パス名を取得する
-  // /から始まっている場合はx.comのユーザーページの可能性があるのでそのままパス名として扱う
-  const pathname = urlStringToPathname(urlStrOrPathname);
-  if (pathname === null) {
-    return false;
-  }
-
-  const segments = pathname.split('/').filter(Boolean);
-  if (segments.length === 1) {
-    return isValidUserId(segments[0]);
-  }
-  return false;
-}
-
-export function isStatusPageUrl(urlStrOrPathname: string): boolean {
-  // urlの形式が https:// スタートの場合はXのURLかどうかをチェックし、パス名を取得する
-  // /から始まっている場合はx.comのユーザーページの可能性があるのでそのままパス名として扱う
-  const pathname = urlStringToPathname(urlStrOrPathname);
-  if (pathname === null) {
-    return false;
-  }
-
-  const segments = pathname.split('/').filter(Boolean);
-  if (segments.length > 1 && segments[1] === 'status') {
-    return isValidUserId(segments[0]);
-  }
-  return false;
-}
-
 /**
- * この関数は, isUserPageUrl(url) が true を返すURLからユーザIDを抽出します。isUserPageUrl(url) で検査済みであることが前提です。
- * @param url
- * @returns
+ * この関数は, isUserContentPage(url) が true を返すURLからユーザIDを抽出します。isUserContentPage(url) で検査済みであることが前提です。
  */
 export function extractUserIdFromUrl(urlStrOrPathname: string): string  {
-// isUserPageUrl(url) で検査済みで前提あること
   const path = urlStringToPathname(urlStrOrPathname);
   if (path === null) {
     throw new Error(`Invalid URL or pathname: ${urlStrOrPathname}`);
