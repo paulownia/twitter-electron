@@ -26,8 +26,8 @@ const unavailableUserIds = new Set([
 const userTabPaths = [
   'with_replies', // ユーザページのリプライ
   'highlights',   // ユーザページのハイライト
-  'media'         // ユーザページのメディア
-]
+  'media',         // ユーザページのメディア
+];
 
 /**
  * ユーザ個別のページかどうか判定。以下のいずれかにマッチするかどうか？
