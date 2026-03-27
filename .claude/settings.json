@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm test:*)",
+      "Bash(npm format:*)",
+      "Bash(npm lint:*)"
+    ]
+  },
+  "sandbox": {
+    "excludedCommands": [
+      "npm test:*",
+      "npm format:*",
+      "npm lint:*"
+    ]
+  }
+}
