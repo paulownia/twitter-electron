@@ -6,7 +6,7 @@ import config from '../config.js';
 import { openWithExternalBrowser } from '../link.js';
 import { getLogger } from '../log.js';
 import { addSpamFilterToQuery, searchUrlList } from '../search.js';
-import { extractUserIdFromUrl, isStatusPageUrl, isUserPageUrl, isValidUserId } from '../user-id.js';
+import { extractUserIdFromUrl, isUserContentPage, isValidUserId } from '../user-id.js';
 import { isXUrl } from '../x-url.js';
 
 const log = getLogger();
@@ -87,9 +87,8 @@ export class TimelineView {
       window: win,
       menu: (defaultActions, params, _browserWindow, dictionarySuggestions) => {
         const pageUrl = win.webContents.getURL();
-        const isUserPage = isUserPageUrl(pageUrl);
-        const isStatusPage = isStatusPageUrl(pageUrl);
-        const userId = (isUserPage || isStatusPage) ? extractUserIdFromUrl(pageUrl) : null;
+        const isUserPage = isUserContentPage(pageUrl);
+        const userId = isUserPage ? extractUserIdFromUrl(pageUrl) : null;
 
         return [
           ...dictionarySuggestions,
@@ -117,7 +116,7 @@ export class TimelineView {
           {
             label: 'Copy user ID',
             // ページのURLがユーザーページ、かつリンクをクリックしていない場合に有効にする
-            visible: !params.linkURL && (isUserPage || isStatusPage),
+            visible: !params.linkURL && isUserPage,
             click: () => {
               if (userId) {
                 clipboard.writeText(`@${userId}`);
@@ -128,7 +127,7 @@ export class TimelineView {
           },
           {
             label: 'Open user page in external browser',
-            visible: !params.linkURL && (isUserPage || isStatusPage),
+            visible: !params.linkURL && isUserPage,
             click: () => {
               if (userId) {
                 const url = `https://x.com/${userId}`;
