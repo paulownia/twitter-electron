@@ -4,6 +4,8 @@ import { initLogger } from './log.js';
 import { initMenu } from './menu.js';
 import { showDefaultView } from './view.js';
 
+app.commandLine.appendSwitch('disk-cache-size', String(512 * 1024 * 1024));
+
 app.whenReady()
   .then(() => initLogger(app))
   .then(() => initConfig())
