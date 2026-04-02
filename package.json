@@ -23,7 +23,7 @@
     "typescript-eslint": "^8.33.1"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "scripts": {
     "start": "tsc && electron .",
@@ -37,8 +37,5 @@
     "test": "tsx --test --enable-source-maps --import @power-assert/node test/**/*.test.ts"
   },
   "author": "",
-  "license": "ISC",
-  "volta": {
-    "node": "24.14.0"
-  }
+  "license": "ISC"
 }
