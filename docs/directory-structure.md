@@ -46,6 +46,7 @@ twitter-electron/
 │   ├── test/                      # テストコード
 │   ├── package.json               # npm設定
 │   └── tsconfig.json              # TypeScript設定
+├── AGENTS.md                        # プロジェクト情報
 ├── build.js                         # ビルドスクリプト
 ├── CLAUDE.md                        # プロジェクト情報
 ├── eslint.config.js                 # ESLint設定

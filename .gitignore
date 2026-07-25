@@ -16,3 +16,6 @@ icon/*.png
 icon/*.icon
 # build artifacts
 icon/*.icns
+
+
+spec/
