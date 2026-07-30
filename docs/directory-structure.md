@@ -10,12 +10,14 @@ twitter-electron/
 │   ├── AppIcon.icns                # macOS用アイコン
 │   └── AppIcon.iconset/            # アイコンセット
 ├── lib/                             # TypeScriptソースコード (メインプロセス)
+│   ├── image-url.ts                # X画像URLの変換
 │   ├── log.ts                      # ロガー
 │   └── views/                      # 各ビューの実装
 ├── preload/                         # プリロードスクリプト
 ├── test/                            # テストコード
 │   └── lib/                        # libディレクトリのテスト
 │       ├── bounds.test.ts          # bounds.tsのテスト
+│       ├── image-url.test.ts       # image-url.tsのテスト
 │       ├── log.test.ts             # log.tsのテスト
 │       └── user-id.test.ts         # user-id.tsのテスト
 ├── ui/                              # レンダラープロセス用UI
