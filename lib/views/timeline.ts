@@ -3,6 +3,7 @@ import contextMenu from 'electron-context-menu';
 import { screen } from 'electron/main';
 import { defaultBounds, equalBounds } from '../bounds.js';
 import config from '../config.js';
+import { getOriginalImageUrl } from '../image-url.js';
 import { openWithExternalBrowser } from '../link.js';
 import { getLogger } from '../log.js';
 import { addSpamFilterToQuery, searchUrlList } from '../search.js';
@@ -166,9 +167,14 @@ export class TimelineView {
             label: 'Open original in external browser',
             visible: params.mediaType === 'image',
             click: () => {
-              const url = params.srcURL.replace(/&name=[a-z0-9]+$/, '&name=orig');
+              const url = getOriginalImageUrl(params.srcURL);
               openWithExternalBrowser(url).catch(log.error);
             },
+          },
+          defaultActions.separator(),
+          {
+            ...defaultActions.saveImageAs({ transform: getOriginalImageUrl }),
+            label: 'Save original image As...',
           },
           defaultActions.separator(),
           // 画像に対するカスタムメニューここまで
