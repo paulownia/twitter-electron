@@ -12,6 +12,7 @@ twitter-electron/
 ├── lib/                             # TypeScriptソースコード (メインプロセス)
 │   ├── image-url.ts                # X画像URLの変換
 │   ├── log.ts                      # ロガー
+│   ├── prompt-request.ts           # プロンプト要求の完了・キャンセル管理
 │   └── views/                      # 各ビューの実装
 ├── preload/                         # プリロードスクリプト
 ├── test/                            # テストコード
@@ -19,6 +20,7 @@ twitter-electron/
 │       ├── bounds.test.ts          # bounds.tsのテスト
 │       ├── image-url.test.ts       # image-url.tsのテスト
 │       ├── log.test.ts             # log.tsのテスト
+│       ├── prompt-request.test.ts  # prompt-request.tsのテスト
 │       └── user-id.test.ts         # user-id.tsのテスト
 ├── ui/                              # レンダラープロセス用UI
 │   ├── preference.html             # 設定画面HTML
