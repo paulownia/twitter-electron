@@ -1,5 +1,4 @@
 import { clipboard } from 'electron';
-
 import event from './event.js';
 import { showPrompt } from './prompt.js';
 import { isValidUserId } from './user-id.js';
@@ -7,7 +6,6 @@ import { PreferenceView } from './views/preference.js';
 import { TimelineView } from './views/timeline.js';
 import { isXUrl } from './x-url.js';
 
-const preferenceView = new PreferenceView();
 const timelineView = new TimelineView();
 
 export function showDefaultView() {
@@ -25,7 +23,7 @@ event.on('select-find-topics', () => {
   });
 });
 event.on('select-logout', () => timelineView.loadLogoutPage());
-event.on('select-preferences', () => preferenceView.show());
+event.on('select-preferences', () => new PreferenceView().show());
 event.on('select-go-user-page', () => {
   showPrompt('user-id', timelineView.window, {
     title: 'Go User Page',
