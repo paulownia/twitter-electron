@@ -12,6 +12,9 @@ interface EventArgs {
   'select-go-user-page': [];
   'select-open-url': [];
   'select-reset-window-size': [];
+  'decide-find-topics': [string];
+  'decide-user-id': [string];
+  'decide-open-url': [string];
 };
 
 type EventName = keyof EventArgs;
