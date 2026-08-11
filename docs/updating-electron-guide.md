@@ -1,59 +1,43 @@
 # Electron バージョンアップ手順
 
-## 1. リリースノートの確認
+## 1. 変更点の調査
 
-[Electron Releases](https://releases.electronjs.org/) で現在のバージョンから目標バージョンまでの **Breaking Changes** を確認する。特に注目すべき点：
+[Electron Releases](https://releases.electronjs.org/)と公式ドキュメントで、現在のバージョンから目標バージョンまでのBreaking Changesを確認する。特に次の変更は、このアプリへの影響を調査する。
 
-- 廃止・変更されたAPI
-- Chromium / Node.js のメジャーバージョン変更
-- セキュリティポリシーの変更（CSP、WebView制約など）
+- `WebView`と`webPreferences`の仕様・セキュリティ要件
+- ウィンドウ、セッション、ナビゲーション関連API
+- ChromiumおよびNode.jsの更新によるWeb版Xへの影響
+- macOSのサポート対象バージョンと署名・パッケージング要件
 
-このプロジェクトはWebViewを使っているため、**WebView関連の変更**には特に注意すること。
-
-## 2. package.json の更新
+## 2. 依存関係の更新
 
 ```bash
 npm install electron@^<新バージョン> --save-dev
 ```
 
-または `package.json` の `"electron"` のバージョンを手動で書き換えてから `npm install` を実行する。
+`@electron/packager`と`electron-context-menu`についても、目標バージョンとの互換性を確認する。依存関係を更新した理由と、調査で見つかった影響を変更内容に記録する。
 
-## 3. 関連パッケージの互換性確認
-
-以下のパッケージがアップグレード後のElectronと互換性があるか確認する：
-
-- `@electron/packager` — ビルドツール。Electronのメジャーバージョンアップ時に更新が必要な場合がある
-- `electron-context-menu` — Electron APIの変更に影響を受ける可能性がある
-
-## 4. TypeScript型定義の確認
-
-Electronの型定義はパッケージに同梱されているため別途更新は不要だが、型エラーが出た場合はAPIの変更に合わせてコードを修正する。
-
-## 5. ビルド・テストの実行
+## 3. 自動検証
 
 ```bash
-# コンパイル確認
 npx tsc
-
-# テスト実行
 npm test
-
-# 開発モードで動作確認
-npm start
-
-# ビルド確認
 npm run build:no-sign
 ```
 
-## 6. 動作確認のポイント
+## 4. 手動確認
 
-このプロジェクト固有の確認項目：
+`npm start`で起動し、少なくとも次を確認する。
 
-- X(Twitter)のWebViewが正常に表示されるか
+- XのWebViewが正常に表示されるか
 - コンテキストメニューが動作するか
-- リンクの外部ブラウザ開放（`open`パッケージ経由）が動くか
-- macOS固有の機能（メニューバー、Dockなど）が正常か
+- リンクが外部ブラウザで開くか
+- ログイン状態やCookieが起動後も維持されるか
+- 設定画面とプロンプト画面が動作するか
+- メニューバー、キーボードショートカット、DockなどのmacOS固有機能が動作するか
 
-## 7. メジャーバージョンを複数跨ぐ場合
+署名付きビルドはApple Developer ID証明書が必要なため、AI Agentではなくユーザが実行する。
 
-例えば v38 → v41 のように複数メジャーバージョンを跨ぐ場合は、**1メジャーずつ段階的にアップグレード**する方が、Breaking Changesの影響を特定しやすい。
+## 5. 複数メジャーバージョンを跨ぐ場合
+
+必ず一律に1メジャーずつ更新するのではなく、Breaking Changesと互換性を先に調査する。問題の切り分けが難しい場合に限り、中間バージョンでの検証を行う。

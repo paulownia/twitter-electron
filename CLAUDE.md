@@ -32,10 +32,14 @@ signedビルドにはKeychainに登録したApple Developer IDの証明書が必
 
 ## 詳細ドキュメント
 
-- [ディレクトリ構成](docs/directory-structure.md) - ファイル追加時に更新が必要
-- [コーディング規約](docs/coding-standards.md) - 命名規則、コメント、スタイル
-- [テストガイド](docs/testing-guide.md) - テストの書き方
-- [ロギング](docs/logging.md) - ロガーの使用方法
+- [コーディング規約](docs/coding-standards.md) - プロジェクト固有の命名規則とコメント方針
+- [Electronバージョンアップ手順](docs/updating-electron-guide.md) - 更新時の確認事項
+
+## 実装上の規約
+
+- メインプロセスのログ出力には`lib/log.ts`の`getLogger()`を使用する。
+- テストには`node:test`、`node:assert`、`@power-assert/node`を使用し、`test/**/*.test.ts`に配置する。
+- モックには原則として`node:test`の`mock.method()`を使用する。
 
 
 ## TODO / Issuesドキュメント
@@ -43,4 +47,3 @@ signedビルドにはKeychainに登録したApple Developer IDの証明書が必
 spec/issuesディレクトリ以下に課題ごとに.mdファイルを作成する。
 
 各課題に対する対応プランはspec/plansディレクトリ以下に設置、issuesと同一のファイル名で.mdファイルを作成する。
-
