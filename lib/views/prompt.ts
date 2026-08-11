@@ -1,11 +1,34 @@
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, WebContents } from 'electron';
 import path from 'path';
 
-export class PromptView {
-  #window: BrowserWindow | null = null;
+// Must be subset of Record<string, string> because of the way query parameters are passed to loadFile.
+// `interface` is not subset of Record<string, string> so we have to use `type`.
+export type PromptOptions = {
+  title: string;
+  placeholder: string;
+  okLabel: string;
+  defaultValue?: string;
+  promptType?: 'text' | 'url';
+  selected?: 'true' | 'false';
+};
 
-  #cerateWindow(parent: BrowserWindow | null) {
-    const win = new BrowserWindow({
+export type PromptKind = 'find-topics' | 'user-id' | 'open-url';
+
+export class PromptView {
+  #window: BrowserWindow;
+  #options: PromptOptions;
+  #kind: PromptKind;
+
+  get window(): BrowserWindow {
+    return this.#window;
+  }
+
+  get kind(): PromptKind {
+    return this.#kind;
+  }
+
+  constructor(parent: BrowserWindow | null, options: PromptOptions, kind: PromptKind) {
+    this.#window = new BrowserWindow({
       parent: parent || undefined,
       width: parent ? parent.getSize()[0] - 16 : 480,
       height: 180,
@@ -19,43 +42,26 @@ export class PromptView {
         preload: path.join(app.getAppPath(), 'preload/prompt.js'),
       },
     });
-    win.on('close', () => this.#window = null);
-    return win;
+    this.#options = options;
+    this.#kind = kind;
   }
 
-  show(parent: BrowserWindow | null, options: Record<string, string> = {}): Promise<string> {
-    if (!this.#window) {
-      this.#window = this.#cerateWindow(parent);
-    }
-
-    this.#window.loadFile('ui/prompt.html', {
-      query: options,
-    });
-
-    this.#window.once('ready-to-show', () => {
-      if (!this.#window) {
-        return;
-      }
+  show() {
+    if (this.#window.isDestroyed()) return;
+    this.#window.loadFile('ui/prompt.html', { query: this.#options }).then(() => {
       this.#window.show();
     });
-
-    return new Promise((resolve, reject) => {
-      ipcMain.handleOnce('prompt-complete', (_event, ...[value, button]) => {
-        if (button === 'cancel' || value === '' || value === null || value === undefined) {
-          reject();
-        } else {
-          resolve(value);
-        }
-        this.close();
-      });
-    });
   }
 
-  close() {
-    ipcMain.removeHandler('prompt-complete');
-    if (this.#window) {
-      this.#window.close();
-      this.#window = null;
-    }
+  isSender(sender: WebContents): boolean {
+    return this.#window?.webContents === sender;
+  }
+
+  close(): void {
+    this.#window.close();
+  }
+
+  onClosed(callback: () => void): void {
+    this.#window.once('closed', callback);
   }
 }

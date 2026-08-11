@@ -12,6 +12,7 @@ twitter-electron/
 ├── lib/                             # TypeScriptソースコード (メインプロセス)
 │   ├── image-url.ts                # X画像URLの変換
 │   ├── log.ts                      # ロガー
+│   ├── prompt.ts                   # プロンプトのIPCと入力結果イベントの管理
 │   └── views/                      # 各ビューの実装
 ├── preload/                         # プリロードスクリプト
 ├── test/                            # テストコード

@@ -1,14 +1,11 @@
 import { clipboard } from 'electron';
-
 import event from './event.js';
-import { isXUrl } from './x-url.js';
+import { showPrompt } from './prompt.js';
 import { isValidUserId } from './user-id.js';
 import { PreferenceView } from './views/preference.js';
-import { PromptView } from './views/prompt.js';
 import { TimelineView } from './views/timeline.js';
+import { isXUrl } from './x-url.js';
 
-const preferenceView = new PreferenceView();
-const promptView = new PromptView();
 const timelineView = new TimelineView();
 
 export function showDefaultView() {
@@ -19,52 +16,40 @@ export function showDefaultView() {
 event.on('select-forward', () => timelineView.goForward());
 event.on('select-back', () => timelineView.goBack());
 event.on('select-find-topics', () => {
-  promptView
-    .show(timelineView.window, {
-      title: 'Find Topics',
-      placeholder: 'input keyword',
-      okLabel: 'Find',
-    })
-    .then(keyword => timelineView.loadSearchPage(keyword))
-    .catch(() => {
-      // ユーザがキャンセルした場合は何もしない
-    });
+  showPrompt('find-topics', timelineView.window, {
+    title: 'Find Topics',
+    placeholder: 'input keyword',
+    okLabel: 'Find',
+  });
 });
 event.on('select-logout', () => timelineView.loadLogoutPage());
-event.on('select-preferences', () => preferenceView.show());
+event.on('select-preferences', () => new PreferenceView().show());
 event.on('select-go-user-page', () => {
-  promptView
-    .show(timelineView.window, {
-      title: 'Go User Page',
-      placeholder: 'input user id',
-      okLabel: 'Go',
-      defaultValue: getUserIdFromClipboard(),
-      selected: 'true', // 型エラー回避のためtrueを文字列に
-    })
-    .then(id => timelineView.loadUserPage(id))
-    .catch(() => {
-      // ユーザがキャンセルした場合は何もしない
-    });
+  showPrompt('user-id', timelineView.window, {
+    title: 'Go User Page',
+    placeholder: 'input user id',
+    okLabel: 'Go',
+    defaultValue: getUserIdFromClipboard(),
+    selected: 'true', // 型エラー回避のためtrueを文字列に
+  });
 });
 event.on('select-open-url', () => {
-  promptView
-    .show(timelineView.window, {
-      title: 'Open URL',
-      defaultValue: getInternalURLFromClipboard(),
-      placeholder: 'input X URL',
-      okLabel: 'Open',
-      promptType: 'url',
-    })
-    .then(url => timelineView.loadInternalUrl(url))
-    .catch(() => {
-      // ユーザがキャンセルした場合は何もしない
-    });
+  showPrompt('open-url', timelineView.window, {
+    title: 'Open URL',
+    defaultValue: getInternalURLFromClipboard(),
+    placeholder: 'input X URL',
+    okLabel: 'Open',
+    promptType: 'url',
+  });
 });
+
+event.on('decide-find-topics', keyword => timelineView.loadSearchPage(keyword));
+event.on('decide-user-id', id => timelineView.loadUserPage(id));
+event.on('decide-open-url', url => timelineView.loadInternalUrl(url));
+
 event.on('select-internal-link', (url: string) => timelineView.loadXPage(url));
 
-event.on('select-reset-window-size', () => {
-  timelineView.resetWindowSize();
-});
+event.on('select-reset-window-size', () => timelineView.resetWindowSize());
 
 /**
  * Clipboardの値がユーザIDとして妥当な場合はその値を返す。
