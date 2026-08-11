@@ -18,7 +18,7 @@
     "electron": "^40.8.5",
     "eslint": "^10.8.0",
     "globals": "^16.2.0",
-    "tsx": "^4.22.4",
+    "tsimp": "^2.0.12",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.1"
   },
@@ -34,7 +34,7 @@
     "lint": "eslint .",
     "format": "eslint --fix .",
     "build-icon": "iconutil -c icns icon/AppIcon.iconset -o icon/AppIcon.icns",
-    "test": "tsx --test --enable-source-maps --import @power-assert/node test/**/*.test.ts"
+    "test": "node --test --enable-source-maps --import tsimp/import --import @power-assert/node test/**/*.test.ts"
   },
   "author": "",
   "license": "ISC"
