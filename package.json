@@ -15,7 +15,7 @@
     "@power-assert/node": "^0.6.0",
     "@stylistic/eslint-plugin": "^4.4.1",
     "dotenv": "^16.3.1",
-    "electron": "^40.8.5",
+    "electron": "^41.10.3",
     "eslint": "^10.8.0",
     "globals": "^16.2.0",
     "tsimp": "^2.0.12",
