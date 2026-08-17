@@ -34,6 +34,7 @@ packager({
     '.env.*',
     '.gitignore',
     '.prototools',
+    '.tsimp',
     '.vscode',
     'README.md',
     'build.js',
