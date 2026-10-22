@@ -120,7 +120,7 @@ export class TimelineView {
             visible: !params.linkURL && isUserPage,
             click: () => {
               if (userId) {
-                clipboard.writeText(`@${userId}`);
+                clipboard.writeText(`@${userId}`).catch(log.error);
               } else {
                 log.warn(`User ID is null for URL: ${pageUrl}`);
               }
@@ -150,7 +150,7 @@ export class TimelineView {
               // mediaIdはpath最後のスラッシュ以降の部分
               const mediaID = new URL(params.srcURL).pathname.split('/').at(-1);
               if (mediaID) {
-                clipboard.writeText(mediaID);
+                clipboard.writeText(mediaID).catch(log.error);
               } else {
                 log.warn(`Failed to extract media ID from URL: ${params.srcURL}`);
               }
