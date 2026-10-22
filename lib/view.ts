@@ -1,5 +1,6 @@
 import { clipboard } from 'electron';
 import event from './event.js';
+import { getLogger } from './log.js';
 import { showPrompt } from './prompt.js';
 import { isValidUserId } from './user-id.js';
 import { PreferenceView } from './views/preference.js';
@@ -7,6 +8,7 @@ import { TimelineView } from './views/timeline.js';
 import { isXUrl } from './x-url.js';
 
 const timelineView = new TimelineView();
+const log = getLogger();
 
 export function showDefaultView() {
   timelineView.show();
@@ -25,22 +27,22 @@ event.on('select-find-topics', () => {
 event.on('select-logout', () => timelineView.loadLogoutPage());
 event.on('select-preferences', () => new PreferenceView().show());
 event.on('select-go-user-page', () => {
-  showPrompt('user-id', timelineView.window, {
+  getUserIdFromClipboard().then(defaultValue => showPrompt('user-id', timelineView.window, {
     title: 'Go User Page',
     placeholder: 'input user id',
     okLabel: 'Go',
-    defaultValue: getUserIdFromClipboard(),
+    defaultValue,
     selected: 'true', // 型エラー回避のためtrueを文字列に
-  });
+  })).catch(log.error);
 });
 event.on('select-open-url', () => {
-  showPrompt('open-url', timelineView.window, {
+  getInternalURLFromClipboard().then(defaultValue => showPrompt('open-url', timelineView.window, {
     title: 'Open URL',
-    defaultValue: getInternalURLFromClipboard(),
+    defaultValue,
     placeholder: 'input X URL',
     okLabel: 'Open',
     promptType: 'url',
-  });
+  })).catch(log.error);
 });
 
 event.on('decide-find-topics', keyword => timelineView.loadSearchPage(keyword));
@@ -57,8 +59,8 @@ event.on('select-reset-window-size', () => timelineView.resetWindowSize());
  * 前後に空白や制御文字がある場合は取り除いて返す。
  * @return ユーザIDまたは空文字列
  */
-function getUserIdFromClipboard(): string {
-  const text = clipboard.readText();
+async function getUserIdFromClipboard(): Promise<string> {
+  const text = await clipboard.readText();
 
   const cleanedText = text.trim();
 
@@ -73,8 +75,8 @@ function getUserIdFromClipboard(): string {
  * XのURLでない場合は空文字列を返す
  * @return XのURLまたは空文字列。
  */
-function getInternalURLFromClipboard(): string {
-  const text = clipboard.readText();
+async function getInternalURLFromClipboard(): Promise<string> {
+  const text = await clipboard.readText();
   if (text && isXUrl(text)) {
     return text;
   } else {
