@@ -77,8 +77,12 @@ async function getUserIdFromClipboard(): Promise<string> {
  */
 async function getInternalURLFromClipboard(): Promise<string> {
   const text = await clipboard.readText();
-  if (text && isXUrl(text)) {
-    return text;
+
+  // 先頭と末尾の空白や制御文字、改行などを取り除く
+  const cleanedText = text.trim();
+
+  if (cleanedText && isXUrl(cleanedText)) {
+    return cleanedText;
   } else {
     return '';
   }
