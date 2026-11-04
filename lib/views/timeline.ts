@@ -1,6 +1,7 @@
-import { BrowserWindow, clipboard } from 'electron';
+import { app, BrowserWindow, clipboard } from 'electron';
 import contextMenu from 'electron-context-menu';
 import { screen } from 'electron/main';
+import path from 'node:path';
 import { defaultBounds, equalBounds } from '../bounds.js';
 import config from '../config.js';
 import { getOriginalImageUrl } from '../image-url.js';
@@ -40,7 +41,12 @@ export class TimelineView {
 
   #createWindow() {
     const bounds = config.get('windowBounds') ?? defaultBounds;
-    const win = new BrowserWindow(bounds);
+    const win = new BrowserWindow({
+      ...bounds,
+      webPreferences: {
+        preload: path.join(app.getAppPath(), 'preload/timeline.js'),
+      },
+    });
     this.setWindowEventHandlers(win);
     this.initContextMenu(win);
     return win;
