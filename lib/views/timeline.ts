@@ -230,6 +230,7 @@ export class TimelineView {
     if (!isXUrl(parsedUrl)) {
       return;
     }
+    parsedUrl.searchParams.delete('a');
     const internalUrl = `${parsedUrl.pathname}${parsedUrl.search}`;
     this.loadXPage(internalUrl);
   }
