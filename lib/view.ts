@@ -82,7 +82,13 @@ async function getInternalURLFromClipboard(): Promise<string> {
   const cleanedText = text.trim();
 
   if (cleanedText && isXUrl(cleanedText)) {
-    return cleanedText;
+    try {
+      const url = new URL(cleanedText);
+      url.searchParams.delete('a');
+      return url.toString();
+    } catch (_e) {
+      return '';
+    }
   } else {
     return '';
   }
